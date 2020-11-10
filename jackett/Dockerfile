@@ -9,6 +9,8 @@ ENV XDG_CONFIG_HOME=/config
 
 USER root
 
+RUN echo "YEET"
+
 RUN \
   apt-get -qq update \
   && \
