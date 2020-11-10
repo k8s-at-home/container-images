@@ -133,7 +133,7 @@ USER kah
 
 EXPOSE 6881 6881/udp ${WEBUI_PORT}
 
-COPY /qbittorrent/qBittorrent.conf /config/qBittorrent/qBittorrent.conf
+COPY /qbittorrent/qBittorrent.conf /app/qBittorrent.conf
 
 COPY ./qbittorrent/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
