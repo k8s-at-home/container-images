@@ -41,7 +41,8 @@ RUN \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/ip6tables -F OUTPUT" >> /etc/sudoers.d/kah \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/iptables -A OUTPUT *" >> /etc/sudoers.d/kah \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/ip6tables -A OUTPUT *" >> /etc/sudoers.d/kah \
-  && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/ip -4 route add*" >> /etc/sudoers.d/kah \
+  && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/ip -4 route add *" >> /etc/sudoers.d/kah \
+  && echo "kah ALL= EXEC: NOPASSWD: /usr/sbin/ip -6 route add *" >> /etc/sudoers.d/kah \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/bin/wg show *" >> /etc/sudoers.d/kah \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/bin/wg-quick up *" >> /etc/sudoers.d/kah \
   && echo "kah ALL= EXEC: NOPASSWD: /usr/bin/wg-quick down *" >> /etc/sudoers.d/kah \
@@ -50,7 +51,6 @@ RUN \
 
 USER kah
 
-EXPOSE 51820/udp
-
+COPY ./wireguard/shim/* /shim
 COPY ./wireguard/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
