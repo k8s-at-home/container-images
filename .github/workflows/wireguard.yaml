@@ -1,0 +1,78 @@
+name: wireguard
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/wireguard.yaml'
+      - 'wireguard/**'
+      - '!wireguard/*.md'
+  pull_request:
+    paths:
+      - '.github/workflows/wireguard.yaml'
+      - 'wireguard/**'
+      - '!wireguard/*.md'
+    types:
+      - opened
+      - reopened
+
+env:
+  REGISTRY_IMAGE: k8sathome/${{ github.workflow }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        id: prep
+        run: |
+          VERSION=$(cat ${{ github.workflow }}/.version)
+          echo ::set-output name=version::${VERSION}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+          version: latest
+          driver-opts: image=moby/buildkit:master
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and Push
+        if: github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v2
+        with:
+          build-args: VERSION=${{ steps.prep.outputs.version }}
+          context: .
+          file: ./${{ github.workflow }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.prep.outputs.version }}-pr${{github.event.number}}
+
+      - name: Build and Push
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v2
+        with:
+          build-args: VERSION=${{ steps.prep.outputs.version }}
+          context: .
+          file: ./${{ github.workflow }}/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:latest
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.prep.outputs.version }}
