@@ -8,7 +8,7 @@ on:
       - '.github/workflows/wireguard.yaml'
       - 'wireguard/**'
       - '!wireguard/*.md'
-  pull_request:
+  pull_request_target:
     paths:
       - '.github/workflows/wireguard.yaml'
       - 'wireguard/**'
