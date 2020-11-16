@@ -55,11 +55,3 @@ EXPOSE 32400/tcp 1900/udp 3005/tcp 5353/udp 8324/tcp 32410/udp 32412/udp 32413/u
 
 COPY ./plex-media-server/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
-
-
-
-
-
-https://downloads.plex.tv/plex-media-server-new/1.20.5.3583-309e93364/debian/plexmediaserver_1.20.5.3583-309e93364_amd64.deb
-
-https://github.com/linuxserver/docker-plex/blob/master/Dockerfile
