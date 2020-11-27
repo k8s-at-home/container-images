@@ -12,11 +12,13 @@ RUN \
     git \
     openssl \
     ${EXTRA_INSTALL_ARG} \
-  && git clone https://github.com/AGWA/git-crypt.git \
-  && cd git-crypt \
-  && git checkout "${VERSION}" \
-  && make -C . -j$(nproc) \
-  && make -C . install \
+  && mkdir -p /tmp/src \
+  && curl -fsSL -o /tmp/git-crypt.tar.gz \
+    "https://github.com/AGWA/git-crypt/archive/${VERSION}.tar.gz" \
+  && tar ixzf /tmp/git-crypt.tar.gz -C /tmp/src --strip-components 1 \
+  && cd /tmp/src \
+  && make -j$(nproc) \
+  && make install \
   && apt-get remove -y ${EXTRA_INSTALL_ARG} \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
