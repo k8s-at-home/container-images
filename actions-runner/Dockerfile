@@ -1,6 +1,6 @@
 # https://github.com/summerwind/actions-runner-controller/blob/master/runner/Dockerfile
-ARG UBUNTUVERSION=focal
-FROM ubuntu:${UBUNTUVERSION}
+ARG UBUNTU_VERSION=focal
+FROM ubuntu:${UBUNTU_VERSION}
 
 ARG VERSION
 ARG TARGETPLATFORM
