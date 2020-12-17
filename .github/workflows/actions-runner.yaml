@@ -33,8 +33,6 @@ jobs:
         run: |
           VERSION=$(cat ${{ github.workflow }}/.version)
           echo ::set-output name=version::${VERSION}
-          UBUNTU_VERSION=$(cat ubuntu/.version)
-          echo ::set-output name=ubuntu_version::${UBUNTU_VERSION}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -61,7 +59,6 @@ jobs:
         with:
           build-args: |
             VERSION=${{ steps.prep.outputs.version }}
-            UBUNTU_VERSION=${{ steps.prep.outputs.ubuntu_version }}
           context: .
           file: ./${{ github.workflow }}/Dockerfile
           platforms: linux/amd64,linux/arm64
@@ -75,7 +72,6 @@ jobs:
         with:
           build-args: |
             VERSION=${{ steps.prep.outputs.version }}
-            UBUNTU_VERSION=${{ steps.prep.outputs.ubuntu_version }}
           context: .
           file: ./${{ github.workflow }}/Dockerfile
           platforms: linux/amd64,linux/arm64
