@@ -40,7 +40,6 @@ RUN \
     'linux/arm64') export ARCH='arm64' ;; \
     'linux/arm/v7') export ARCH='arm' ;; \
   esac \
-  && echo "Installing Runner, arch: ${ARCH}" \
   && mkdir -p /runner \
   && cd /runner \
   && curl -fsSL -o runner.tar.gz https://github.com/actions/runner/releases/download/v${VERSION}/actions-runner-linux-${ARCH}-${VERSION}.tar.gz \
@@ -55,51 +54,91 @@ RUN \
   && chmod g+rwx "${AGENT_TOOLSDIRECTORY}"
 
 # Install latest kubectl
-RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
+RUN \
+  case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='arm' ;; \
+  esac \
+  && curl -sLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/${ARCH}/kubectl \
   && mv kubectl /usr/local/bin/kubectl \
   && chmod +x /usr/local/bin/kubectl \
   && kubectl version --client 
-  
+
 # Install latest helm3
 RUN curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash \
   && helm version 
 
 # Install latest kubeseal
-RUN KUBESEAL_VERSION=$(curl -s "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases" | jq --raw-output '.[0].tag_name') \
+RUN case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='linux-amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='arm' ;; \
+  esac \
+  && KUBESEAL_VERSION=$(curl -s "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases" | jq --raw-output '.[0].tag_name') \
   && KUBESEAL_VERSION=${KUBESEAL_VERSION:1} \
-  && curl -sL -o /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-linux-amd64 \
+  && curl -sL -o /usr/local/bin/kubeseal https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${ARCH} \
   && chmod +x /usr/local/bin/kubeseal \
   && kubeseal --version
 
 # Install latest fluxctl
-RUN FLUXCTL_VERSION=$(curl -s "https://api.github.com/repos/fluxcd/flux/releases" | jq --raw-output '.[0].tag_name') \
+RUN case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='arm' ;; \
+  esac \
+  && FLUXCTL_VERSION=$(curl -s "https://api.github.com/repos/fluxcd/flux/releases" | jq --raw-output '.[0].tag_name') \
   && FLUXCTL_VERSION=${FLUXCTL_VERSION} \
-  && curl -sL -o /usr/local/bin/fluxctl https://github.com/fluxcd/flux/releases/download/${FLUXCTL_VERSION}/fluxctl_linux_amd64 \
+  && curl -sL -o /usr/local/bin/fluxctl https://github.com/fluxcd/flux/releases/download/${FLUXCTL_VERSION}/fluxctl_linux_${ARCH} \
   && chmod +x /usr/local/bin/fluxctl \
   && fluxctl version
 
 # Install latest gomplate
-RUN GOMPLATE_VERSION=$(curl -s "https://api.github.com/repos/hairyhenderson/gomplate/releases" | jq --raw-output '.[0].tag_name') \
+RUN case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='armv7' ;; \
+  esac \
+  && GOMPLATE_VERSION=$(curl -s "https://api.github.com/repos/hairyhenderson/gomplate/releases" | jq --raw-output '.[0].tag_name') \
   && GOMPLATE_VERSION=${GOMPLATE_VERSION:1} \
-  && curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-amd64 \
+  && curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v${GOMPLATE_VERSION}/gomplate_linux-${ARCH} \
   && chmod +x /usr/local/bin/gomplate \
   && gomplate -v
 
 # Install latest yq
-RUN curl -sL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+RUN case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='arm' ;; \
+  esac \
+  && curl -sL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} \
   && chmod +x /usr/local/bin/yq \
   && yq --version
 
-# Install latest task
-RUN curl -sL https://taskfile.dev/install.sh | sh \
-  && mv ./bin/task /usr/local/bin/task \
-  && chmod +x /usr/local/bin/task \
-  && task --version
+# Install latest task for amd64 builds
+RUN \
+  case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='' ;; \
+    'linux/arm/v7') export ARCH='' ;; \
+  esac \
+  && if [ -n "$ARCH" ]; then \
+    curl -sL https://taskfile.dev/install.sh | sh \
+    && mv ./bin/task /usr/local/bin/task \
+    && chmod +x /usr/local/bin/task \
+    && task --version; \
+  fi
 
 # Install latest flux
-RUN FLUX_VERSION=$(curl -s "https://api.github.com/repos/fluxcd/flux2/releases" | jq --raw-output '.[0].tag_name') \
+RUN \
+  case "${TARGETPLATFORM}" in \
+    'linux/amd64') export ARCH='amd64' ;; \
+    'linux/arm64') export ARCH='arm64' ;; \
+    'linux/arm/v7') export ARCH='arm' ;; \
+  esac \
+  && FLUX_VERSION=$(curl -s "https://api.github.com/repos/fluxcd/flux2/releases" | jq --raw-output '.[0].tag_name') \
   && FLUX_VERSION=${FLUX_VERSION:1} \
-  && curl -o flux.tar.gz -sSL https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz \
+  && curl -o flux.tar.gz -sSL https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_${ARCH}.tar.gz \
   && tar xf flux.tar.gz -C /usr/local/bin flux \
   && rm -rf flux.tar.gz \
   && chmod +x /usr/local/bin/flux \

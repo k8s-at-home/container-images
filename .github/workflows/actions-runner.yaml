@@ -60,7 +60,7 @@ jobs:
           build-args: VERSION=${{ steps.prep.outputs.version }}
           context: .
           file: ./${{ github.workflow }}/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             k8sathome/pull-request:${{github.event.number}}
@@ -72,7 +72,7 @@ jobs:
           build-args: VERSION=${{ steps.prep.outputs.version }}
           context: .
           file: ./${{ github.workflow }}/Dockerfile
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ env.REGISTRY_IMAGE }}:latest
