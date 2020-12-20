@@ -66,7 +66,7 @@ case "${TARGETPLATFORM}" in
     'linux/arm64') ARCH='arm64' ;;
     'linux/arm/v7') ARCH='arm' ;;
 esac
-KUBESEAL_VERSION=$(curl -s "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases" | jq --raw-output '.[0].tag_name')
+KUBESEAL_VERSION=$(curl -s "https://api.github.com/repos/bitnami-labs/sealed-secrets/releases" | jq --raw-output "map(select(any(.assets[].name; contains(\"kubeseal-${ARCH}\"))))[0].tag_name")
 KUBESEAL_VERSION=${KUBESEAL_VERSION:1}
 curl -sL -o /usr/local/bin/kubeseal "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${ARCH}"
 chmod +x /usr/local/bin/kubeseal
