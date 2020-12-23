@@ -3,11 +3,17 @@ FROM k8sathome/ubuntu:latest
 USER root
 
 RUN \
-  export BUILD_DEPS="autoconf automake build-essential git libavahi-core-dev libavahi-compat-libdnssd-dev libfreeipmi-dev libgd-dev libmodbus-dev libipmimonitoring-dev libneon27-gnutls-dev libpowerman0-dev libsnmp-dev libtool libltdl-dev libusb-dev libssl-dev pkg-config python3" \
+  export BUILD_DEPS="autoconf automake build-essential git libssl-dev libnss3-dev libtool pkg-config python3" \
   && apt-get -qq update \
   && apt-get -qq install -y \
-    libnss3-dev \
-    libwrap0-dev \
+    libfreeipmi17 \
+    libipmimonitoring6 \
+    libneon27-gnutls \
+    libnss3 \
+    libsnmp35 \
+    libltdl7 \
+    libusb-0.1-4 \
+    libwrap0 \
     ${BUILD_DEPS} \
   && mkdir -p /var/run/nut \
   && chown kah:kah /var/run/nut \
