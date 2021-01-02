@@ -30,6 +30,21 @@ But please do report any bugs when you see them!
 |  `/app`   | Application install directory       |
 | `/config` | Application configuration directory |
 
+### Permissions:
+
+Our default permissions are set for user 568.
+However: With these containers, permissions are not set using environment variables.
+
+Switching to these images might requires you to either:
+1. change permissions to the Persistent Volume (from PVC) (example: `chown -R 568:568 /path/to/volume/`)
+or
+2. setting the podSecurityContext in the helm charts to your user/group ids, like below:
+```
+podSecurityContext:
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroup: 1001
+```
 ### Environment Variables
 |      Name      | Default | Description                                       |
 |:--------------:|:-------:|---------------------------------------------------|
