@@ -21,7 +21,7 @@ _There's so many images out there, why do I want to use these?_
 Most of these containers are frequently used as drop-in-replacements for our k8s-at-home Helm Charts.
 While we do not know if (or when) these containers will be the default for the Helm Charts, they work just fine!
 
-Within docker-compose and other solutions, they should work just fine too. 
+Within docker-compose and other solutions, they should work just fine too but that isn't guaranteed. 
 But please do report any bugs when you see them!
 
 ### Volumes
@@ -55,4 +55,3 @@ But please do report any bugs when you see them!
 |        [tautulli](https://github.com/Tautulli/Tautulli)         | [![Version](https://img.shields.io/docker/v/k8sathome/tautulli?sort=semver&style=for-the-badge)](https://hub.docker.com/r/k8sathome/tautulli)           | [![Status](https://img.shields.io/github/workflow/status/k8s-at-home/container-images/tautulli?style=for-the-badge)](https://github.com/k8s-at-home/container-images/actions?query=workflow%3Atautulli)           |
 |      [wireguard](https://github.com/WireGuard/wireguard-tools)      | [![Version](https://img.shields.io/docker/v/k8sathome/wireguard?sort=semver&style=for-the-badge)](https://hub.docker.com/r/k8sathome/wireguard)             | [![Status](https://img.shields.io/github/workflow/status/k8s-at-home/container-images/wireguard?style=for-the-badge)](https://github.com/k8s-at-home/container-images/actions?query=workflow%3Awireguard)             |
 |      [xteve](https://github.com/xteve-project/xTeVe)      | [![Version](https://img.shields.io/docker/v/k8sathome/xteve?sort=semver&style=for-the-badge)](https://hub.docker.com/r/k8sathome/xteve)             | [![Status](https://img.shields.io/github/workflow/status/k8s-at-home/container-images/xteve?style=for-the-badge)](https://github.com/k8s-at-home/container-images/actions?query=workflow%3Axteve)             |
-
