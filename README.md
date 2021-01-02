@@ -18,7 +18,7 @@ _There's so many images out there, why do I want to use these?_
 
 ### Deployment on Kubernetes
 
-Most of these containers are frequently used as drop-in-replacements for our k8s-at-home Helm Charts.
+Most of these containers can be used as drop-in-replacements for the images in our k8s-at-home [Helm charts](https://github.com/k8s-at-home/charts/).
 While we do not know if (or when) these containers will be the default for the Helm Charts, they work just fine!
 
 Within docker-compose and other solutions, they should work just fine too but that isn't guaranteed. 
