@@ -42,24 +42,18 @@ RUN \
   esac \
   && echo "arch: ${ARCH}" \
   && \
-  case "${VERSION}" in \
-    (4\.2.*) \
-      export LIBTORRENT_DEB="libtorrent-rasterbar9_1.1.13-1.1build2_${ARCH}.deb" \
-      export LIBTORRENT_DEV_DEB="libtorrent-rasterbar-dev_1.1.13-1.1build2_${ARCH}.deb" ;; \
-    (4\.3.*) \
-      export LIBTORRENT_DEB="libtorrent-rasterbar10_1.2.5-1.2_${ARCH}.deb" \
-      export LIBTORRENT_DEV_DEB="libtorrent-rasterbar-dev_1.2.5-1.2_${ARCH}.deb" ;; \
-  esac \
+  export LIBTORRENT_DEB="libtorrent-rasterbar10_1.2.12+git20210118.3efdb8a941-1ppa1~20.04_${ARCH}.deb" \
+  && export LIBTORRENT_DEV_DEB="libtorrent-rasterbar-dev_1.2.12+git20210118.3efdb8a941-1ppa1~20.04_${ARCH}.deb" \
   && echo "libtorrent deb: ${LIBTORRENT_DEB}" \
   && echo "libtorrent-dev deb: ${LIBTORRENT_DEB}" \
   && \
   curl -fsSL -o libtorrent-rasterbar.deb \
-    "https://launchpad.net/ubuntu/+archive/primary/+files/${LIBTORRENT_DEB}" \
+    "https://launchpad.net/~qbittorrent-team/+archive/ubuntu/qbittorrent-stable/+files/${LIBTORRENT_DEB}" \
   && dpkg -i libtorrent-rasterbar.deb \
   && rm -rf libtorrent-rasterbar.deb \
   && \
   curl -fsSL -o libtorrent-rasterbar-dev.deb \
-    "https://launchpad.net/ubuntu/+archive/primary/+files/${LIBTORRENT_DEV_DEB}" \
+    "https://launchpad.net/~qbittorrent-team/+archive/ubuntu/qbittorrent-stable/+files/${LIBTORRENT_DEV_DEB}" \
   && dpkg -i libtorrent-rasterbar-dev.deb \
   && rm -rf libtorrent-rasterbar-dev.deb
 
@@ -96,15 +90,10 @@ RUN \
     'linux/arm/v7') export ARCH='armhf' ;; \
   esac \
   && \
-  case "${VERSION}" in \
-    (4\.2.*) \
-      export LIBTORRENT_DEB="libtorrent-rasterbar9_1.1.13-1.1build2_${ARCH}.deb" ;; \
-    (4\.3.*) \
-      export LIBTORRENT_DEB="libtorrent-rasterbar10_1.2.5-1.2_${ARCH}.deb" ;; \
-  esac \
+  export LIBTORRENT_DEB="libtorrent-rasterbar10_1.2.12+git20210118.3efdb8a941-1ppa1~20.04_${ARCH}.deb" \
   && \
   curl -fsSL -o libtorrent-rasterbar.deb \
-    "https://launchpad.net/ubuntu/+archive/primary/+files/${LIBTORRENT_DEB}" \
+    "https://launchpad.net/~qbittorrent-team/+archive/ubuntu/qbittorrent-stable/+files/${LIBTORRENT_DEB}" \
   && dpkg -i libtorrent-rasterbar.deb \
   && rm -rf libtorrent-rasterbar.deb \
   && \
