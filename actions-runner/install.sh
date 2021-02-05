@@ -33,14 +33,15 @@ case "${TARGETPLATFORM}" in
     'linux/arm/v7') ARCH='arm' ;;
 esac
 mkdir -p /runner
-cd /runner
+mkdir -p "$RUNNER_ASSETS_DIR"
+cd "$RUNNER_ASSETS_DIR"
 curl -fsSL -o runner.tar.gz https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-linux-${ARCH}-${GH_RUNNER_VERSION}.tar.gz
 tar xzf ./runner.tar.gz
 rm runner.tar.gz
 ./bin/installdependencies.sh
 mv ./externals ./externalstmp
 apt-get install -y libyaml-dev
-echo "AGENT_TOOLSDIRECTORY=${AGENT_TOOLSDIRECTORY}" > /runner.env
+echo "AGENT_TOOLSDIRECTORY=${AGENT_TOOLSDIRECTORY}" > .env
 mkdir "${AGENT_TOOLSDIRECTORY}"
 chgrp runner "${AGENT_TOOLSDIRECTORY}"
 chmod g+rwx "${AGENT_TOOLSDIRECTORY}"

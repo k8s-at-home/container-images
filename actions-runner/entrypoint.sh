@@ -44,10 +44,24 @@ if [ -z "${RUNNER_REPO}" ] && [ -n "${RUNNER_ORG}" ] && [ -n "${RUNNER_GROUP}" ]
   RUNNER_GROUP_ARG="--runnergroup ${RUNNER_GROUP}"
 fi
 
+sudo mv /runnertmp/* /runner/
+sudo chown -R runner:runner /runner
+
+# This fixes https://github.com/actions/runner/issues/945
+# TODO: Remove this once the issue is closed
+cd /runner/bin
+for lib in $(find . -name 'System.*'); do
+    toFile=$(echo "$lib" | sed -e 's/\.\/System\./.\/libSystem./g')
+    if ! [ -f $toFile ]; then 
+        sudo ln -s $lib $toFile
+    fi
+done
+
 cd /runner
 ./config.sh --unattended --replace --name "${RUNNER_NAME}" --url "${GITHUB_URL}${ATTACH}" --token "${RUNNER_TOKEN}" ${RUNNER_GROUP_ARG} ${LABEL_ARG} ${WORKDIR_ARG}
 
 # Hack due to the DinD volumes
+mkdir -p ./externals
 mv ./externalstmp/* ./externals/
 
 for f in runsvc.sh RunnerService.js; do

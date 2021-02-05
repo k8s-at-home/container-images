@@ -6,6 +6,7 @@ ARG TARGETPLATFORM
 ENV \
   DEBCONF_NONINTERACTIVE_SEEN=true \
   DEBIAN_FRONTEND=noninteractive
+ENV RUNNER_ASSETS_DIR=/runnertmp
 
 USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -18,8 +19,8 @@ RUN \
   && /install.sh ${VERSION} ${TARGETPLATFORM} \
   && rm /install.sh
 
-COPY ./actions-runner/entrypoint.sh /runner/entrypoint.sh
-COPY ./actions-runner/patched /runner/patched
+COPY ./actions-runner/entrypoint.sh /entrypoint.sh
+COPY ./actions-runner/patched $RUNNER_ASSETS_DIR/patched
 
 USER runner
-CMD ["/runner/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
