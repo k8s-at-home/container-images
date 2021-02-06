@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and Push
+      - name: Build
         if: github.ref != 'refs/heads/main'
         uses: docker/build-push-action@v2
         with:
@@ -76,7 +76,6 @@ jobs:
           context: .
           file: ./${{ github.workflow }}/Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
           load: true
           tags: |
             k8sathome/pull-request:${{github.event.number}}
@@ -89,6 +88,11 @@ jobs:
           GOSS_FILE: ${{ github.workflow }}/goss.yaml
         run: |
           dgoss run k8sathome/pull-request:${{github.event.number}}
+
+      - name: Push image
+        if: github.ref != 'refs/heads/main'
+        run: |
+          docker push k8sathome/pull-request:${{github.event.number}}
 
       - name: Build and Push
         if: github.ref == 'refs/heads/main'
