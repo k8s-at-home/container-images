@@ -19,6 +19,7 @@ on:
 
 env:
   REGISTRY_IMAGE: k8sathome/${{ github.workflow }}
+  GOSS_SLEEP: 30
 
 jobs:
   build:
@@ -47,6 +48,11 @@ jobs:
           version: latest
           driver-opts: image=moby/buildkit:master
 
+      - name: Set up goss/dgoss
+        uses: e1himself/goss-installation-action
+        with:
+          version: 'v0.3.16'
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -64,6 +70,13 @@ jobs:
           push: true
           tags: |
             k8sathome/pull-request:${{github.event.number}}
+
+      - name: Test image
+        if: github.ref != 'refs/heads/main'
+        env:
+          GOSS_FILE: ${{ github.workflow }}/goss.yaml
+        run: |
+          dgoss run k8sathome/pull-request:${{github.event.number}}
 
       - name: Build and Push
         if: github.ref == 'refs/heads/main'
