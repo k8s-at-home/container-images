@@ -49,7 +49,7 @@ jobs:
           driver-opts: image=moby/buildkit:master
 
       - name: Set up goss/dgoss
-        uses: e1himself/goss-installation-action
+        uses: e1himself/goss-installation-action@v1.0.3
         with:
           version: 'v0.3.16'
 
