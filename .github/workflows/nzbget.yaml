@@ -57,7 +57,7 @@ jobs:
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_PAT }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and Push
         if: github.ref != 'refs/heads/main'
