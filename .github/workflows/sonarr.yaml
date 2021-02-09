@@ -56,18 +56,6 @@ jobs:
         username: ${{ secrets.GHCR_USERNAME }}
         password: ${{ secrets.GHCR_TOKEN }}
 
-    - name: Build and Push
-      if: github.ref != 'refs/heads/main'
-      uses: docker/build-push-action@v2
-      with:
-        build-args: VERSION=${{ steps.prep.outputs.version }}
-        context: .
-        file: ./${{ github.workflow }}/Dockerfile
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: |
-          ghcr.io/k8s-at-home/pull-request:${{github.event.number}}
-
     - name: Set up goss/dgoss
       uses: e1himself/goss-installation-action@v1.0.3
       with:
