@@ -47,13 +47,26 @@ jobs:
           version: latest
           driver-opts: image=moby/buildkit:master
 
+      - name: Set up goss/dgoss
+        uses: e1himself/goss-installation-action@v1.0.3
+        with:
+          version: 'v0.3.16'
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and Push
+      - name: Build and push
         if: github.ref != 'refs/heads/main'
         uses: docker/build-push-action@v2
         with:
@@ -64,6 +77,28 @@ jobs:
           push: true
           tags: |
             k8sathome/pull-request:${{github.event.number}}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Build local single-platform for testing
+        if: github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v2
+        with:
+          build-args: VERSION=${{ steps.prep.outputs.version }}
+          context: .
+          file: ./${{ github.workflow }}/Dockerfile
+          load: true
+          tags: |
+            k8sathome/pull-request:${{github.event.number}}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Test image
+        if: github.ref != 'refs/heads/main'
+        env:
+          GOSS_FILE: ${{ github.workflow }}/goss.yaml
+        run: |
+          dgoss run k8sathome/pull-request:${{github.event.number}}
 
       - name: Build and Push
         if: github.ref == 'refs/heads/main'
