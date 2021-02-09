@@ -23,7 +23,7 @@ These images are using user and group ids of `568`. This cannot be changed at th
 
 With that said however there are two methods you can use to make these containers have write access to your file storage:
 
-1. Changing the Kubernetes [Security Contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) to allow the container to have permissions to write to your file storage. In our [Helm charts](https://github.com/k8s-at-home/charts/) this can be accomplish by setting the `podSecurityContext.runAsUser`, `podSecurityContext.runAsGroup`, and `podSecurityContext.fsGroup` values to your required user / group ids.
+1. Changing the Kubernetes [Security Contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) to allow the container to have permissions to write to your file storage. In our [Helm charts](https://github.com/k8s-at-home/charts/) this can be accomplished by setting the `podSecurityContext.runAsUser`, `podSecurityContext.runAsGroup`, and `podSecurityContext.fsGroup` values to your required user / group ids.
 
 2. Access the volume's data without the pod running and running `chown -R 568:568 <path-to-your-volume>`.  This step can be a bit complicated if you are not very familiar with your storage interface.
 
