@@ -3,7 +3,7 @@
 # hence all the scattered logic written below
 #
 
-FROM k8sathome/ubuntu:latest as builder
+FROM ghcr.io/k8s-at-home/ubuntu:latest as builder
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -68,7 +68,7 @@ RUN \
   && make \
   && make install
 
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
 ARG VERSION

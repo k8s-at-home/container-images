@@ -17,7 +17,7 @@ RUN \
   && go get ./... \
   && go build -o /go/bin/xteve xteve.go
 
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG VERSION
 ARG TARGETPLATFORM

@@ -1,4 +1,4 @@
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG VERSION
 ARG TARGETPLATFORM
