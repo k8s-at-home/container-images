@@ -19,6 +19,8 @@ on:
 
 env:
   REGISTRY_IMAGE: k8sathome/${{ github.workflow }}
+  # How long to sleep before running the tests (gives the application time to start)
+  GOSS_SLEEP: 30
 
 jobs:
   build:
