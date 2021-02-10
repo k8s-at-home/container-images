@@ -39,8 +39,8 @@ RUN \
   /app/Dockerfile \
   /app/docker-compose* \
   /app/simulations \
+  /app/*.md \
   /app/conf.js \
-  /app/node_modules
 
 USER kah
 
