@@ -1,0 +1,7 @@
+process:
+  jackett:
+    running: true
+
+port:
+  tcp6:9117:
+    listening: true

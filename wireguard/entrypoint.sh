@@ -2,6 +2,8 @@
 
 set -e
 
+source "/shim/iptables-backend.sh"
+
 if [[ "$(cat /proc/sys/net/ipv4/conf/all/src_valid_mark)" != "1" ]]; then
     echo "[WARNING] sysctl net.ipv4.conf.all.src_valid_mark=1 is not set" >&2
 fi

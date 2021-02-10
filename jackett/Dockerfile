@@ -1,4 +1,4 @@
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -12,7 +12,7 @@ USER root
 RUN \
   apt-get -qq update \
   && \
-  apt-get -qq install -y --no-install-recommends --no-install-suggests \
+  apt-get -qq install -y \
     libicu66 \
     libssl1.1 \
   && \
@@ -38,7 +38,8 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc
+  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && update-ca-certificates
 
 USER kah
 

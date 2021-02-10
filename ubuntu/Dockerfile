@@ -33,6 +33,11 @@ RUN \
     'linux/arm/v7') export ARCH='armhf' ;; \
   esac \
   && \
+  echo 'APT::Install-Recommends "false";' >/etc/apt/apt.conf.d/00recommends \
+  && echo 'APT::Install-Suggests "false";' >>/etc/apt/apt.conf.d/00recommends \
+  && echo 'APT::Get::Install-Recommends "false";' >>/etc/apt/apt.conf.d/00recommends \
+  && echo 'APT::Get::Install-Suggests "false";' >>/etc/apt/apt.conf.d/00recommends \
+  && \
   apt-get -qq update \
   && \
   apt-get -qq install -y --no-install-recommends --no-install-suggests \
@@ -41,7 +46,7 @@ RUN \
     gnupg2 \
     locales \
     tzdata \
-    vim-tiny \
+    vim \
   && locale-gen en_US.UTF-8 \
   && curl -fsSL -o /sbin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH}" \
   && curl -fsSL -o /tini.asc "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-${ARCH}.asc" \

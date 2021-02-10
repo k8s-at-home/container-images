@@ -1,4 +1,4 @@
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG VERSION
 
@@ -6,7 +6,7 @@ USER root
 
 RUN \
   apt-get -qq update \
-  && apt-get -qq install -y --no-install-recommends gnupg \
+  && apt-get -qq install -y gnupg \
 	&& \
   apt-key adv \
     --keyserver hkp://keyserver.ubuntu.com \
@@ -14,7 +14,7 @@ RUN \
   && echo "deb http://download.mono-project.com/repo/ubuntu stable-focal main" > /etc/apt/sources.list.d/mono-official-stable.list \
   && echo "deb https://mediaarea.net/repo/deb/ubuntu focal main" > /etc/apt/sources.list.d/mediaarea.list \
   && \
-  apt-get -qq install -y --no-install-recommends --no-install-suggests \
+  apt-get -qq install -y \
     libicu66 \
     mediainfo \
     mono-devel \
@@ -40,7 +40,8 @@ RUN \
     /var/cache/apt/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc
+  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && update-ca-certificates
 
 USER kah
 

@@ -1,38 +1,40 @@
 name: Get latest release versions
 
 on:
-  push:
-    paths:
-      - ".github/workflows/schedule.yml"
-    branches:
-      - main
-  schedule:
-    - cron: "0 */6 * * *"
   workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+    - ".github/workflows/schedule.yml"
+  schedule:
+  - cron: "0 */4 * * *"
 
 jobs:
   get-version:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 1
-      - name: Fetch release versions
-        run: |
-          find . -maxdepth 1 -mindepth 1 -type d | while read app; do
-            if test -f "./${app}/latest-version.sh"; then
-              version=$(bash "./${app}/latest-version.sh")
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        fetch-depth: 1
+    - name: Fetch release versions
+      run: |
+        find . -maxdepth 1 -mindepth 1 -type d | while read app; do
+          if test -f "./${app}/latest-version.sh"; then
+            version=$(bash "./${app}/latest-version.sh")
+            if [ ! -z "${version}" ]; then
               echo "${version}" | tee "${app}/.version" > /dev/null
               echo "${app} ${version}"
             fi
-          done
-      - name: Add, commit and push to applications version file
-        run: |
-          if [[ -n $(git status --porcelain) ]]; then
-            git config --global user.name "Devin Buhl"
-            git config --global user.email "onedr0p@users.noreply.github.com"
-            git add -A
-            git commit -sam "Adding new release versions" || exit 0
-            git push
           fi
+        done
+    - name: Add, commit and push to applications version file
+      run: |
+        if [[ -n $(git status --porcelain) ]]; then
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add -A
+          git commit -sam "Adding new release versions" || exit 0
+          git push
+        fi

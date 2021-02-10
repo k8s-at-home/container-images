@@ -1,4 +1,4 @@
-FROM k8sathome/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -11,7 +11,7 @@ RUN \
   export EXTRA_INSTALL_ARG="build-essential libssl-dev libffi-dev python3-dev python3-pip"; \
   apt-get -qq update \
   && \
-  apt-get -qq install -y --no-install-recommends --no-install-suggests \
+  apt-get -qq install -y \
     python3 \
     python3-setuptools \
     ${EXTRA_INSTALL_ARG} \
@@ -40,7 +40,8 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc
+  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && update-ca-certificates
 
 USER kah
 
