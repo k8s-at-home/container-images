@@ -25,4 +25,23 @@ RUN \
   && \
   chown -R kah:kah /app \
   && \
-  npm install /app --unsafe
+  npm install /app --unsafe \
+  && \
+  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && \
+  apt-get autoremove -y \
+  && \
+  apt-get clean \
+  && rm -rf \
+  /app/.github \
+  /app/assets \
+  /app/docs \
+  /app/Dockerfile \
+  /app/docker-compose* \
+  /app/simulations \
+  /app/conf.js \
+  /app/node_modules
+
+USER kah
+
+EXPOSE 17365
