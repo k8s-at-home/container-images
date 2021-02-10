@@ -14,6 +14,7 @@ RUN \
     nodejs \
     npm \
     build-essential \
+    git \
     ${EXTRA_INSTALL_ARG} \
   && \
   curl -fsSL "https://github.com/DeviaVir/zenbot/archive/${VERSION}.tar.gz" | tar xzf - -C /app --strip-components 1 \
