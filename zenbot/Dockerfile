@@ -8,6 +8,8 @@ ARG VERSION
 
 RUN \
   export EXTRA_INSTALL_ARG="node-gyp"; \
+  sed -i '/_apt/d' /etc/passwd \
+  && \
   apt-get -qq update \
   && \
   apt-get -qq install -y \
