@@ -47,5 +47,5 @@ USER kah
 
 EXPOSE 17365
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./zenbot/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
