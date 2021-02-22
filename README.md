@@ -32,13 +32,15 @@ Most of these images can be used as drop-in-replacements for the images in our k
 
 These images are using user and group ids of `568`. This cannot be changed at the container runtime.
 
-With that said however there are three methods you can use to make these containers have write access to your file storage:
+With that said however there are multiple methods you can use to make these containers have write access to your file storage:
 
 1. Changing the Kubernetes [Security Contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) to allow the container to have permissions to write to your file storage. In our [Helm charts](https://github.com/k8s-at-home/charts/) this can be accomplished by setting the `podSecurityContext.runAsUser`, `podSecurityContext.runAsGroup`, and `podSecurityContext.fsGroup` values to your required user / group ids.
 
 2. Access the volume's data without the pod running and running `chown -R 568:568 <path-to-your-volume>`.  This step can be a bit complicated if you are not very familiar with your storage interface.
 
-3. Implement a initcontainer running as root to automatically chown the volume's data.
+3. Using a custom job with a `pre-install,pre-upgrade` helm-hook. Which chown's all mountpoints. [Example](https://github.com/truecharts/truecharts/blob/master/library/common/templates/custom/_mountPermissionsJob.yaml)
+
+4. Implement a initcontainer running as root to automatically chown the volume's data.
 something like:
 ```
  initContainers:
