@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - "$default-branch"
+    - main
     paths:
     - '.github/workflows/tt-rss.yaml'
     - 'tt-rss/**'
