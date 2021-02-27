@@ -7,7 +7,7 @@ if [ -d "$CHECKOUT_DIR" ]; then
   cd "$CHECKOUT_DIR"
   git pull > /dev/null
 else
-  git clone https://git.tt-rss.org/fox/tt-rss.git "$CHECKOUT_DIR" > /dev/null
+  git clone https://git.tt-rss.org/fox/tt-rss.git "$CHECKOUT_DIR" > /dev/null 2>&1
   cd "$CHECKOUT_DIR"
 fi
 
