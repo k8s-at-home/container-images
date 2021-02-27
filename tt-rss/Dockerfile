@@ -38,8 +38,8 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/
 
-COPY nginx.conf /etc/nginx/sites-enabled/default
-COPY entrypoint.sh /entrypoint.sh
+COPY ./tt-rss/nginx.conf /etc/nginx/sites-enabled/default
+COPY ./tt-rss/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
 
 #USER kah
