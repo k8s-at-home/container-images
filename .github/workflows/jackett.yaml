@@ -103,7 +103,7 @@ jobs:
       env:
         GOSS_FILE: ${{ github.workflow }}/goss.yaml
       run: |
-        dgoss run k8sathome/pull-request:${{github.event.number}}
+        dgoss run ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
 
     - name: Build and Push (non PR)
       if: github.event_name != 'pull_request'
