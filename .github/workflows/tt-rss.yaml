@@ -67,7 +67,7 @@ jobs:
         tags: |
           ghcr.io/k8s-at-home/pull-request:${{github.event.number}}
 
-    - name: Build and Push (others)
+    - name: Build and Push (non PR)
       if: github.event_name != 'pull_request'
       uses: docker/build-push-action@v2
       with:
