@@ -70,8 +70,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build and Push
-      if: github.event.number != ''
+    - name: Build and Push (PR)
+      if: github.event_name == 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
@@ -104,8 +104,8 @@ jobs:
       run: |
         dgoss run k8sathome/pull-request:${{github.event.number}}
 
-    - name: Build and Push
-      if: github.ref == 'refs/heads/main'
+    - name: Build and Push (non PR)
+      if: github.event_name != 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}

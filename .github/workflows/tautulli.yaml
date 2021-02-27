@@ -55,8 +55,8 @@ jobs:
         username: ${{ secrets.GHCR_USERNAME }}
         password: ${{ secrets.GHCR_TOKEN }}
 
-    - name: Build and Push
-      if: github.event.number != ''
+    - name: Build and Push (PR)
+      if: github.event_name == 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
@@ -67,8 +67,8 @@ jobs:
         tags: |
           ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
 
-    - name: Build and Push
-      if: github.ref == 'refs/heads/main'
+    - name: Build and Push (non PR)
+      if: github.event_name != 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
