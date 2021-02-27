@@ -55,7 +55,7 @@ jobs:
         password: ${{ secrets.GHCR_TOKEN }}
 
     - name: Build and Push
-      if: github.ref != 'refs/heads/main'
+      if: github.event.number != ''
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
