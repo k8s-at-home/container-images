@@ -43,4 +43,7 @@ COPY ./tt-rss/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
 
 #USER kah
+#nginx and php use www-data as non-privileged user
+#this container does not need to write persistent files - it only persist to DB
+
 EXPOSE 8080
