@@ -21,8 +21,12 @@ RUN \
     nginx \
     ${EXTRA_INSTALL_ARG} \
   && git clone https://git.tt-rss.org/fox/tt-rss.git /app \
-  && git clone https://git.tt-rss.org/fox/ttrss-nginx-xaccel.git /apps/plugins.local/nginx_xaccel \
   && cd /app \
+  && if [ -n "$VERSION" ]; then \
+    NUMBER_COMMITS_TO_REVERT=$(( $(git rev-list --count --first-parent HEAD) - $(echo $VERSION|cut -d "." -f2) )); \
+    git checkout "master~$NUMBER_COMMITS_TO_REVERT"; \
+  fi \
+  && git clone https://git.tt-rss.org/fox/ttrss-nginx-xaccel.git /apps/plugins.local/nginx_xaccel \
   && chown -R www-data:www-data cache feed-icons lock \
   && cp -a config.php-dist config.php \
   && cd - \
@@ -44,6 +48,6 @@ CMD ["/entrypoint.sh"]
 
 #USER kah
 #nginx and php use www-data as non-privileged user
-#this container does not need to write persistent files - it only persist to DB
+#this container does not need to write persistent files - it only persists to DB
 
 EXPOSE 8080

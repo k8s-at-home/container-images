@@ -11,6 +11,6 @@ else
   cd "$CHECKOUT_DIR"
 fi
 
-number_of_commits=$(git rev-list --count HEAD)
+number_of_commits=$(git rev-list --count --first-parent HEAD)
 
 printf "%s.%s.0" "${MAYOR_VERSION}" "${number_of_commits}"
