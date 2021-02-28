@@ -51,6 +51,7 @@ jobs:
         driver-opts: image=moby/buildkit:master
 
     - name: Login to GitHub Container Registry
+      if: github.event_name != 'pull_request'
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
@@ -70,22 +71,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build and Push
-      if: github.ref != 'refs/heads/main'
+    - name: Build and Push (PR)
+      if: github.event_name == 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
         context: .
         file: ./${{ github.workflow }}/Dockerfile
         platforms: linux/amd64,linux/arm64
-        push: true
+        push: false # GitHub secrets not available in PRs
         tags: |
-          ghcr.io/k8s-at-home/pull-request:${{github.event.number}}
+          ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
     - name: Build local single-platform for testing
-      if: github.ref != 'refs/heads/main'
+      if: github.event.number != ''
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
@@ -93,19 +94,19 @@ jobs:
         file: ./${{ github.workflow }}/Dockerfile
         load: true
         tags: |
-          ghcr.io/k8s-at-home/pull-request:${{github.event.number}}
+          ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
     - name: Test image
-      if: github.ref != 'refs/heads/main'
+      if: github.event.number != ''
       env:
         GOSS_FILE: ${{ github.workflow }}/goss.yaml
       run: |
-        dgoss run ghcr.io/k8s-at-home/pull-request:${{github.event.number}}
+        dgoss run ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
 
-    - name: Build and Push
-      if: github.ref == 'refs/heads/main'
+    - name: Build and Push (non PR)
+      if: github.event_name != 'pull_request'
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
@@ -114,5 +115,5 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          ghcr.io/k8s-at-home/${{ env.REGISTRY_IMAGE }}:latest
-          ghcr.io/k8s-at-home/${{ env.REGISTRY_IMAGE }}:v${{ steps.prep.outputs.version }}
+          ghcr.io/${{ github.repository_owner }}/${{ env.REGISTRY_IMAGE }}:latest
+          ghcr.io/${{ github.repository_owner }}/${{ env.REGISTRY_IMAGE }}:v${{ steps.prep.outputs.version }}
