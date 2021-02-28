@@ -17,7 +17,7 @@ PSQL="psql -q -h $TTRSS_DB_HOST -U $TTRSS_DB_USER $TTRSS_DB_NAME"
 $PSQL -c "create extension if not exists pg_trgm"
 
 if ! $PSQL -c 'select * from ttrss_version'; then
-	$PSQL < /var/www/html/tt-rss/schema/ttrss_schema_pgsql.sql
+	$PSQL < /app/schema/ttrss_schema_pgsql.sql
 fi
 
 # PHP in debug mode
