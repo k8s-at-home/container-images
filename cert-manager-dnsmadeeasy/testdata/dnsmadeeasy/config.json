@@ -1,0 +1,11 @@
+{
+  "apiKeyRef": {
+    "name": "api-secret",
+    "key": "key"
+  },
+  "apiSecretRef": {
+    "name": "api-secret",
+    "key": "secret"
+  },
+  "sandbox": false
+}

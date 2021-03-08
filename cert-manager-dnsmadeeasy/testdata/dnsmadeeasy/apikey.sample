@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-secret
+type: Opaque
+stringData:
+  key: DNSMADEEASY_API_KEY
+  secret: DNSMADEEASY_API_SECRET
