@@ -12,7 +12,7 @@ goos="unknown"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   goos="linux"
-elif [[ "$OSTYPE" == "linux-musl" ]]; then
+elif [[ "$OSTYPE" == "linux-musl"* ]]; then
   goos="linux"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   goos="darwin"
