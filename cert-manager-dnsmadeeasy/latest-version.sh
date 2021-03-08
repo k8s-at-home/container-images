@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-cat .version
+echo -n "1.0.0"
