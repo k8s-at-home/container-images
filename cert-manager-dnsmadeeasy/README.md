@@ -22,4 +22,4 @@ Before you can run the test suite, you need to set your `apykey.yaml`with your D
 
 ## Increment the version
 
-Update string in [cert-manager-webhook-dnsmadeeasy/latest-version.sh](cert-manager-webhook-dnsmadeeasy/latest-version.sh)
+Update string in [.version](.version)
