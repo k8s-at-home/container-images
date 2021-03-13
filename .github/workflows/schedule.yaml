@@ -24,7 +24,7 @@ jobs:
           if test -f "./${app}/latest-version.sh"; then
             version=$(bash "./${app}/latest-version.sh")
             if [[ ! -z "${version}" || "${version}" != "null" ]]; then
-              echo "${version}" | tee "${app}/.version" > /dev/null
+              echo "${version}" | tee "${app}/VERSION" > /dev/null
               echo "${app} ${version}"
             fi
           fi

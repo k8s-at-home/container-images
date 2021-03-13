@@ -45,7 +45,7 @@ jobs:
     - name: Prepare
       id: prep
       run: |
-        VERSION=$(cat ${{ matrix.container }}/.version)
+        VERSION=$(cat ${{ matrix.container }}/VERSION)
         echo ::set-output name=version::${VERSION}
         if test -f "${{ matrix.container }}/goss.yaml"; then
           echo ::set-output name=goss::true
