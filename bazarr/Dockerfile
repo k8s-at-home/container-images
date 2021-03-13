@@ -14,7 +14,7 @@ RUN \
     python3-distutils \
     ffmpeg \
     unrar \
-    unzip \ 
+    unzip \
     ${EXTRA_INSTALL_ARG} \
   && \
   ln -s /usr/bin/python3 /usr/bin/python \

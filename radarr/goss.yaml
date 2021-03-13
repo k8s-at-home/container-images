@@ -9,5 +9,5 @@ port:
 http:
   http://localhost:7878:
     status: 200
-    body: 
+    body:
       - '<title>Radarr</title>'

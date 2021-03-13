@@ -15,7 +15,7 @@ RUN \
     python3 \
     python3-distutils \
     unrar \
-    unzip \ 
+    unzip \
     ${EXTRA_INSTALL_ARG} \
   && \
   ln -s /usr/bin/python3 /usr/bin/python \

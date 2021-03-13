@@ -55,11 +55,11 @@ esac
 curl -sLO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/${ARCH}/kubectl"
 mv kubectl /usr/local/bin/kubectl
 chmod +x /usr/local/bin/kubectl
-kubectl version --client 
+kubectl version --client
 
 # Install latest helm3
 curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-helm version 
+helm version
 
 # Install latest kubeseal
 case "${TARGETPLATFORM}" in

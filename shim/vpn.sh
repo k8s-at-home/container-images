@@ -7,7 +7,7 @@ if
 then
     echo "Waiting for VPN to be connected..."
     while ! grep -s -q "connected" /shared/vpnstatus;
-    do 
+    do
         echo "VPN not connected"
         sleep 2
     done

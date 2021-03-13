@@ -15,7 +15,7 @@ if [ -n "${IPTABLES_BACKEND}" ]; then
             exit 1
     esac
 else
-    # Detect whether the base system is using iptables-legacy or iptables-nft. 
+    # Detect whether the base system is using iptables-legacy or iptables-nft.
     # This assumes that some non-containerized process (eg kubelet) has already created some iptables rules.
     # In case of doubt, it will always pick legacy mode.
     num_legacy_lines=$( (sudo /usr/sbin/iptables-legacy-save || true; sudo /usr/sbin/ip6tables-legacy-save || true) 2>/dev/null | grep '^-' | wc -l)

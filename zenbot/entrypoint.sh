@@ -7,4 +7,4 @@ if [[ -f "/config/conf.js" ]]; then
     cp /config/conf.js /app/conf.js
 fi
 
-exec /usr/bin/node zenbot.js "$@" 
+exec /usr/bin/node zenbot.js "$@"

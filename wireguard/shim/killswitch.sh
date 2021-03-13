@@ -10,7 +10,7 @@ then
     DEFAULTROUTE_IPV4=$(/usr/sbin/ip -4 route | grep default | awk '{print $3}')
     KILLSWITCH_EXCLUDEDNETWORKS_IPV4=${KILLSWITCH_EXCLUDEDNETWORKS_IPV4:-""}
     sudo /usr/sbin/iptables -F OUTPUT
-    if 
+    if
         [[ -n "${DEFAULTROUTE_IPV4}" ]] && [[ -n "$KILLSWITCH_EXCLUDEDNETWORKS_IPV4" ]];
     then
         IFS="${SEPARATOR}" read -r -a networks <<< "${KILLSWITCH_EXCLUDEDNETWORKS_IPV4}"
@@ -28,7 +28,7 @@ then
     DEFAULTROUTE_IPV6=$(/usr/sbin/ip -6 route | grep default | awk '{print $3}')
     KILLSWITCH_EXCLUDEDNETWORKS_IPV6=${KILLSWITCH_EXCLUDEDNETWORKS_IPV6:-""}
     sudo /usr/sbin/ip6tables -F OUTPUT
-    if 
+    if
         [[ -n "${DEFAULTROUTE_IPV6}" ]] && [[ -n "${KILLSWITCH_EXCLUDEDNETWORKS_IPV6}" ]];
     then
         IFS="${SEPARATOR}" read -r -a networks <<< "${KILLSWITCH_EXCLUDEDNETWORKS_IPV6}"

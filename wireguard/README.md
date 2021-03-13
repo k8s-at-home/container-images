@@ -14,7 +14,7 @@ The container runs as a non-privileged user. This user should **not** be changed
 
 ## Configuration
 
-You will need a configuration file for your Wireguard interface. 
+You will need a configuration file for your Wireguard interface.
 Mount this configuration file to /etc/wireguard/ (e.g. `/etc/wireguard/wg0.conf`)
 
 | Environment variable             | Description                                                                     | Default value |

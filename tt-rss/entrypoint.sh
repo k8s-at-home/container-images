@@ -4,7 +4,7 @@
 source "/shim/umask.sh"
 source "/shim/vpn.sh"
 
-export PGPASSWORD=$TTRSS_DB_PASS 
+export PGPASSWORD=$TTRSS_DB_PASS
 
 while ! pg_isready -h $TTRSS_DB_HOST -U $TTRSS_DB_USER; do
 	echo waiting until $TTRSS_DB_HOST is ready...

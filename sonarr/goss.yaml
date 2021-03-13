@@ -9,5 +9,5 @@ port:
 http:
   http://localhost:8989:
     status: 200
-    body: 
+    body:
       - '<title>Sonarr (Preview)</title>'
