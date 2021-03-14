@@ -11,11 +11,9 @@ RUN \
   apt-get -qq update \
   && apt-get -qq install -y gnupg \
 	&& \
-  apt-key adv \
-    --keyserver hkp://keyserver.ubuntu.com \
-    --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF C5CDF62C7AE05CC847657390C10E11090EC0E438 \
-  && echo "deb http://download.mono-project.com/repo/ubuntu stable-focal main" > /etc/apt/sources.list.d/mono-official-stable.list \
-  && echo "deb https://mediaarea.net/repo/deb/ubuntu focal main" > /etc/apt/sources.list.d/mediaarea.list \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+  && echo "deb https://download.mono-project.com/repo/ubuntu focal/snapshots/${MONO_VERSION} main" | tee /etc/apt/sources.list.d/mono-official.list \
+  && apt-get -qq update \
   && \
   apt-get -qq install -y \
     mono-complete=${MONO_VERSION}\* \
