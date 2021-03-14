@@ -6,7 +6,7 @@ on:
     branches:
     - main
     paths:
-    - ".github/workflows/apps-schedule.yml"
+    - ".github/workflows/base-schedule.yml"
   schedule:
   - cron: "0 */4 * * *"
 
