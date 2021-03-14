@@ -18,6 +18,23 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         fetch-depth: 1
+    - name: Fetch base versions
+      run: |
+        find . -maxdepth 1 -mindepth 1 -type d | while read app; do
+          if test -f "./${app}/latest-base.sh"; then
+            base=$(bash "./${app}/latest-base.sh")
+            if [[ ! -z "${base}" || "${base}" != "null" ]]; then
+              echo "${base}" | tee "${app}/BASE" > /dev/null
+              echo "${app} ${base}"
+            fi
+          else
+            base=$(cat "./ubuntu/VERSION")
+            if [[ ! -z "${base}" || "${base}" != "null" ]]; then
+              echo "${base}" | tee "${app}/BASE" > /dev/null
+              echo "${app} ${base}"
+            fi
+          fi
+        done
     - name: Fetch release versions
       run: |
         find . -maxdepth 1 -mindepth 1 -type d | while read app; do
