@@ -4,6 +4,9 @@ ARG VERSION
 
 USER root
 
+# https://download.mono-project.com/repo/ubuntu/dists/focal/snapshots/
+ENV MONO_VERSION=6.12.0.122
+
 RUN \
   apt-get -qq update \
   && apt-get -qq install -y gnupg \
@@ -15,10 +18,8 @@ RUN \
   && echo "deb https://mediaarea.net/repo/deb/ubuntu focal main" > /etc/apt/sources.list.d/mediaarea.list \
   && \
   apt-get -qq install -y \
-    libicu66 \
-    mediainfo \
-    mono-devel \
-    ca-certificates-mono \
+    mono-complete=${MONO_VERSION}\* \
+    libmediainfo0v5 \
   && \
   curl -fsSL -o /tmp/sonarr.tar.gz \
     "https://download.sonarr.tv/v3/phantom-develop/${VERSION}/Sonarr.phantom-develop.${VERSION}.linux.tar.gz" \

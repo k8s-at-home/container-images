@@ -10,7 +10,6 @@ RUN \
   && \
   apt-get -qq install -y \
     libicu66 \
-    libmediainfo0v5 \
   && \
   case "${TARGETPLATFORM}" in \
     'linux/amd64') export ARCH='x64' ;; \
@@ -18,13 +17,13 @@ RUN \
     'linux/arm/v7') export ARCH='arm' ;; \
   esac \
   && \
-  curl -fsSL -o /tmp/radarr.tar.gz \
-    "https://radarr.servarr.com/v1/update/develop/updatefile?version=${VERSION}&os=linux&runtime=netcore&arch=${ARCH}" \
-  && tar ixzf /tmp/radarr.tar.gz -C /app --strip-components 1 \
+  curl -fsSL -o /tmp/readarr.tar.gz \
+    "https://readarr.servarr.com/v1/update/nightly/updatefile?version=${VERSION}&os=linux&runtime=netcore&arch=${ARCH}" \
+  && tar ixzf /tmp/readarr.tar.gz -C /app --strip-components 1 \
   && \
   rm -rf \
-    /app/Radarr.Update* \
-  && echo "UpdateMethod=docker\nBranch=develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
+    /app/readarr.Update* \
+  && echo "UpdateMethod=docker\nBranch=nightly\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
   && apt-get autoremove -y \
   && apt-get clean \
   && \
@@ -38,7 +37,7 @@ RUN \
 
 USER kah
 
-EXPOSE 7878
+EXPOSE 8686
 
-COPY ./radarr/entrypoint.sh /entrypoint.sh
+COPY ./readarr/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
