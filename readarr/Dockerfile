@@ -37,7 +37,7 @@ RUN \
 
 USER kah
 
-EXPOSE 8686
+EXPOSE 8787
 
 COPY ./readarr/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
