@@ -30,7 +30,7 @@ jobs:
         uses: ReyahSolutions/matrix-git-generator@v1
         with:
           filters: |
-            **
+            base/**
 
   build:
     name: Build
@@ -48,11 +48,11 @@ jobs:
     - name: Prepare
       id: prep
       run: |
-        VERSION=$(cat ${{ matrix.container }}/VERSION)
+        VERSION=$(cat ./base/${{ matrix.container }}/VERSION)
         echo ::set-output name=version::${VERSION}
-        PLATFORM=$(cat ${{ matrix.container }}/PLATFORM)
+        PLATFORM=$(cat ./base/${{ matrix.container }}/PLATFORM)
         echo ::set-output name=platform::${PLATFORM}
-        if test -f "${{ matrix.container }}/goss.yaml"; then
+        if test -f "./base/${{ matrix.container }}/goss.yaml"; then
           echo ::set-output name=goss::true
         else
           echo ::set-output name=goss::false
@@ -108,7 +108,7 @@ jobs:
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
         context: .
-        file: ./${{ matrix.container }}/Dockerfile
+        file: ./base/${{ matrix.container }}/Dockerfile
         load: true
         tags: |
           ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:test
@@ -130,7 +130,7 @@ jobs:
         build-args: VERSION=${{ steps.prep.outputs.version }}
         context: .
         platforms: ${{ steps.prep.outputs.platform }}
-        file: ./${{ matrix.container }}/Dockerfile
+        file: ./base/${{ matrix.container }}/Dockerfile
         push: ${{ steps.prep.outputs.push }}
         tags: |
           ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:latest

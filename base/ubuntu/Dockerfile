@@ -71,7 +71,7 @@ USER kah
 
 VOLUME [ "/config" ]
 
-COPY ./bases/ubuntu-focal/shim /shim
+COPY ./base/ubuntu/shim /shim
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
 LABEL "maintainer"="Devin Buhl <devin.kray@gmail.com>, Bernd Schorgers <me@bjw-s.dev>"
