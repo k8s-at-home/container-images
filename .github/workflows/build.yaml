@@ -6,14 +6,12 @@ on:
     branches:
     - main
   pull_request:
-    types:
-    - opened
-    - reopened
 
 env:
   # How long to sleep before running the tests (gives the application time to start)
   GOSS_SLEEP: 30
 
+# Detect which folders in project-root (which contain the containers) contain changes
 jobs:
   detect_changes:
     name: Detect Changes
@@ -42,15 +40,23 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+      # Define if tests and push should be run against which versions/platforms
     - name: Prepare
       id: prep
       run: |
         VERSION=$(cat ${{ matrix.container }}/VERSION)
         echo ::set-output name=version::${VERSION}
+        PLATFORM=$(cat ${{ matrix.container }}/PLATFORM)
+        echo ::set-output name=platform::${PLATFORM}
         if test -f "${{ matrix.container }}/goss.yaml"; then
           echo ::set-output name=goss::true
         else
           echo ::set-output name=goss::false
+        fi
+        if [ "${{github.event_name}}" == "pull_request" ]; then
+          echo ::set-output name=push::false
+        else
+          echo ::set-output name=push::true
         fi
 
     - name: Set up QEMU
@@ -58,6 +64,15 @@ jobs:
       with:
         platforms: all
 
+    - name: Login to GHCR
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+      # Install and configure Buildx
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v1
@@ -66,20 +81,7 @@ jobs:
         version: latest
         driver-opts: image=moby/buildkit:master
 
-    - name: Login to GitHub Container Registry
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ secrets.GHCR_USERNAME }}
-        password: ${{ secrets.GHCR_TOKEN }}
-
-    - name: Set up goss/dgoss
-      uses: e1himself/goss-installation-action@v1.0.3
-      if: ${{ steps.prep.outputs.goss == 'true' }}
-      with:
-        version: 'v0.3.16'
-
+      # Make sure we can store buildx cache in-between builds
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
@@ -88,22 +90,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build and Push (PR)
-      if: github.event_name == 'pull_request'
-      uses: docker/build-push-action@v2
+      # Install the GOSS testing framework
+    - name: Set up goss/dgoss
+      uses: e1himself/goss-installation-action@v1.0.3
+      if: ${{ steps.prep.outputs.goss == 'true' }}
       with:
-        build-args: VERSION=${{ steps.prep.outputs.version }}
-        context: .
-        platforms: linux/amd64,linux/arm64
-        file: ./${{ matrix.container }}/Dockerfile
-        push: false # GitHub secrets not available in PRs
-        tags: |
-          ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        version: 'v0.3.16'
 
-    - name: Build local single-platform for testing (PR)
-      if: github.event.number != ''
+      # Creates a local build to run tests on
+    - name: Build and Load local test-container
+      if: ${{ steps.prep.outputs.goss == 'true' }}
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
@@ -111,26 +107,28 @@ jobs:
         file: ./${{ matrix.container }}/Dockerfile
         load: true
         tags: |
-          ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
+          ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:test
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
-    - name: Test image
-      if: ${{ github.event.number != '' && steps.prep.outputs.goss  == 'true' }}
+      # Run GOSS tests if included with the container
+    - name: Run GOSS tests
+      if: ${{ steps.prep.outputs.goss == 'true' }}
       env:
         GOSS_FILE: ${{ matrix.container }}/goss.yaml
       run: |
-        dgoss run ghcr.io/${{ github.repository_owner }}/pull-request:${{github.event.number}}
+        dgoss run ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:test
 
-    - name: Build and Push (non PR)
-      if: github.event_name != 'pull_request'
+      # Push if not a PR, otherwise just test the build process for all requested platforms
+    - name: Build and Push
       uses: docker/build-push-action@v2
       with:
         build-args: VERSION=${{ steps.prep.outputs.version }}
         context: .
-        platforms: linux/amd64,linux/arm64
+        platforms: ${{ steps.prep.outputs.platform }}
         file: ./${{ matrix.container }}/Dockerfile
-        push: true
+        push: ${{ steps.prep.outputs.push }}
         tags: |
           ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:latest
           ghcr.io/${{ github.repository_owner }}/${{ matrix.container }}:v${{ steps.prep.outputs.version }}
+        cache-from: type=local,src=/tmp/.buildx-cache
