@@ -2,7 +2,6 @@ ARG VERSION
 
 FROM alpine:${VERSION}
 
-# hadolint ignore=DL3018
 RUN \
     apk add --no-cache \
         tini \
