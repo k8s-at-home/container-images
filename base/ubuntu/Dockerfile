@@ -23,6 +23,7 @@ RUN \
 
 WORKDIR /app
 
+# hadolint ignore=DL3008,DL3015
 RUN \
   set -eux \
   && \
