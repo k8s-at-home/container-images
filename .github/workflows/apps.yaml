@@ -38,18 +38,31 @@ jobs:
         CONTAINERS=$(jq --raw-output '.changed_files | fromjson | .[] |= sub("(?<filepath>(?<first_directory>(?<root1>[/]?)[^/]+/)(?<second_directory>(?<root2>[/]?)[^/]+)(?<extra_paths>.+))"; "\(.second_directory)") | unique' changes.json)
         echo ::set-output name=containers::${CONTAINERS}
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-20.04
-    needs: changes
-    strategy:
-      matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
-      fail-fast: true
-    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+  hadolint:
+    name: hadolint
+    runs-on: ubuntu-latest
     steps:
-    - uses: brpaz/hadolint-action@v1.2.1
+    - name: Check out code
+      uses: actions/checkout@v1
+    - name: hadolint
+      uses: reviewdog/action-hadolint@v1
       with:
-        dockerfile: ./apps/${{ matrix.container }}/Dockerfile
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        fail_on_error: true
+
+  # lint:
+  #   name: Lint
+  #   runs-on: ubuntu-20.04
+  #   needs: changes
+  #   strategy:
+  #     matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
+  #     fail-fast: true
+  #   if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+  #   steps:
+  #   - uses: brpaz/hadolint-action@v1.2.1
+  #     with:
+  #       dockerfile: ./apps/${{ matrix.container }}/Dockerfile
 
   build:
     name: Build
