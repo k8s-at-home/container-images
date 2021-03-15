@@ -38,10 +38,23 @@ jobs:
         CONTAINERS=$(jq --raw-output '.changed_files | fromjson | .[] |= sub("(?<filepath>(?<first_directory>(?<root1>[/]?)[^/]+/)(?<second_directory>(?<root2>[/]?)[^/]+)(?<extra_paths>.+))"; "\(.second_directory)") | unique' changes.json)
         echo ::set-output name=containers::${CONTAINERS}
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    needs: changes
+    strategy:
+      matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
+      fail-fast: true
+    steps:
+    - uses: brpaz/hadolint-action@v1.2.1
+      with:
+        dockerfile: ./apps/${{ matrix.container }}/Dockerfile
+
   build:
     name: Build
     runs-on: ubuntu-20.04
     needs:
+    - lint
     - changes
     strategy:
       matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
