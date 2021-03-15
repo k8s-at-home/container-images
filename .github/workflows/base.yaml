@@ -35,11 +35,13 @@ jobs:
         echo ::set-output name=containers::${CONTAINERS}
 
   hadolint:
-    name: hadolint
-    runs-on: ubuntu-latest
+    name: Run hadolint
+    runs-on: ubuntu-20.04
+    needs:
+    - changes
     steps:
-    - name: Check out code
-      uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: hadolint
       uses: reviewdog/action-hadolint@v1
       with:
