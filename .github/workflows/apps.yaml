@@ -68,7 +68,7 @@ jobs:
     name: Build
     runs-on: ubuntu-20.04
     needs:
-    - lint
+    # - lint
     - changes
     strategy:
       matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
