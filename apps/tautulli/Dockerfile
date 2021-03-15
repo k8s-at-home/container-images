@@ -1,12 +1,16 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
 ARG VERSION
 
-ENV TAUTULLI_DOCKER="True"
-
 USER root
 
+ENV TAUTULLI_DOCKER="True"
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# hadolint ignore=DL3008,DL3013,DL3015,SC2086
 RUN \
   export EXTRA_INSTALL_ARG="build-essential libssl-dev libffi-dev python3-dev python3-pip"; \
   apt-get -qq update \
@@ -28,7 +32,7 @@ RUN \
 	  plexapi \
     pycryptodomex \
   && \
-  echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
   && \
   apt-get remove -y ${EXTRA_INSTALL_ARG} \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -40,7 +44,7 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

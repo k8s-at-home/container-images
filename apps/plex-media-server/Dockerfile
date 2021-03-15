@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
@@ -17,6 +18,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility" \
     PLEX_MEDIA_SERVER_INFO_VENDOR="Docker" \
     PLEX_MEDIA_SERVER_INFO_DEVICE="Docker Container (k8s-at-home)"
 
+# hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
   case "${TARGETPLATFORM}" in \
     'linux/amd64') \
@@ -45,11 +47,11 @@ RUN \
   case "${ARCH}" in \
     'amd64') \
       curl -J -L -o /tmp/gmmlib.deb https://github.com/intel/compute-runtime/releases/download/${INTEL_NEO_VERSION}/intel-gmmlib_${INTEL_GMMLIB_VERSION}_amd64.deb \
-      && apt install -y /tmp/gmmlib.deb \
+      && apt-get install -y /tmp/gmmlib.deb \
       && curl -J -L -o /tmp/#1.deb https://github.com/intel/intel-graphics-compiler/releases/download/igc-${INTEL_IGC_VERSION}/{intel-igc-core,intel-igc-opencl}_${INTEL_IGC_VERSION}_amd64.deb \
-      && apt install -y /tmp/intel-igc-core.deb /tmp/intel-igc-opencl.deb \
+      && apt-get install -y /tmp/intel-igc-core.deb /tmp/intel-igc-opencl.deb \
       && curl -J -L -o /tmp/intel-opencl.deb https://github.com/intel/compute-runtime/releases/download/${INTEL_NEO_VERSION}/intel-opencl_${INTEL_NEO_VERSION}_amd64.deb \
-      && apt install -y /tmp/intel-opencl.deb \
+      && apt-get install -y /tmp/intel-opencl.deb \
     ;; \
   esac \
   && \
@@ -60,8 +62,9 @@ RUN \
   && \
   dpkg -i --force-confold --force-architecture /tmp/plex.deb \
   && \
-  echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && apt-get remove -y aria2 \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get remove -y aria2 \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
   && apt-get clean \
@@ -72,7 +75,7 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

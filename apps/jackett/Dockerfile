@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
@@ -9,6 +10,7 @@ ENV XDG_CONFIG_HOME=/config
 
 USER root
 
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   apt-get -qq update \
   && \
@@ -28,8 +30,10 @@ RUN \
   && \
   rm -rf \
     /app/JackettUpdater* \
-  && echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && apt-get autoremove -y \
+  && \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get autoremove -y \
   && apt-get clean \
   && \
   rm -rf \
@@ -37,7 +41,7 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

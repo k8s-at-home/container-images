@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG VERSION
@@ -7,6 +8,9 @@ USER root
 # https://download.mono-project.com/repo/ubuntu/dists/focal/snapshots/
 ENV MONO_VERSION=6.12.0.122
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   apt-get -qq update \
   && apt-get -qq install -y gnupg \
@@ -25,8 +29,10 @@ RUN \
   && \
   rm -rf \
     /app/Sonarr.Update* \
-  && echo "UpdateMethod=docker\nBranch=phantom-develop\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && gpgconf --kill all \
+  && \
+  printf "UpdateMethod=docker\nBranch=phantom-develop\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  gpgconf --kill all \
   && apt-get remove -y gnupg2 \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
@@ -38,7 +44,7 @@ RUN \
     /var/cache/apt/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

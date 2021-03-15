@@ -3,16 +3,19 @@
 # hence all the scattered logic written below
 #
 
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest as builder
 
 ARG TARGETPLATFORM
 ARG VERSION
 
+# hadolint ignore=DL3002
 USER root
 
 WORKDIR /tmp
 
 # Install system dependencies
+# hadolint ignore=DL3008
 RUN \
   apt-get -qq update \
   && \
@@ -68,6 +71,7 @@ RUN \
   && make \
   && make install
 
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
@@ -83,6 +87,7 @@ USER root
 
 COPY --from=builder /usr/local/bin/qbittorrent-nox /app/qbittorrent-nox
 
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   case "${TARGETPLATFORM}" in \
     'linux/amd64') export ARCH='amd64' ;; \
@@ -106,8 +111,10 @@ RUN \
     python3 \
     unrar \
     unzip \
-  && echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && apt-get autoremove -y \
+  && \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get autoremove -y \
   && apt-get clean \
   && \
   rm -rf \
@@ -115,7 +122,7 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

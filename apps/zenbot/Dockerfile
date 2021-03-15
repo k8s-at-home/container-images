@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 USER root
@@ -5,7 +6,9 @@ USER root
 ARG TARGETPLATFORM
 ARG VERSION
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   export EXTRA_INSTALL_ARG="node-gyp"; \
   sed -i '/_apt/d' /etc/passwd \

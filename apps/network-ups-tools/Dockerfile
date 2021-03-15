@@ -1,7 +1,12 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
+# hadolint ignore=DL3002
 USER root
 
+WORKDIR /tmp/nut
+
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   export BUILD_DEPS="\
     autoconf \
@@ -38,20 +43,18 @@ RUN \
     libwrap0 \
     ${BUILD_DEPS} \
   && mkdir -p /var/run/nut \
-  && cd /tmp \
-  && git clone https://github.com/networkupstools/nut.git nut \
-  && cd /tmp/nut \
+  && git clone https://github.com/networkupstools/nut.git . \
   && ln -s /usr/bin/python3 /usr/bin/python \
   && ./autogen.sh \
   && ./configure \
     --sysconfdir=/etc/nut \
-    --libdir=/usr/lib/`gcc -print-multiarch` \
+    --libdir=/usr/lib/"$(gcc -print-multiarch)" \
     --with-all \
     --with-ssl --with-nss \
     --with-dev --enable-static \
     --with-statepath=/var/run/nut --with-altpidpath=/var/run/nut \
     --with-pidpath=/var/run/nut \
-  && make -j \
+  && make -j"$(nproc)" \
   && make install \
   && chown -R kah:kah /etc/nut \
   && apt-get remove -y ${BUILD_DEPS} \
@@ -63,6 +66,8 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/
+
+WORKDIR /config
 
 COPY ./apps/network-ups-tools/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]

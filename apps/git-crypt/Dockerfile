@@ -1,9 +1,13 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG VERSION
 
 USER root
 
+WORKDIR /tmp/src
+
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   export EXTRA_INSTALL_ARG="build-essential libssl-dev" \
   && \
@@ -13,12 +17,10 @@ RUN \
     git \
     openssl \
     ${EXTRA_INSTALL_ARG} \
-  && mkdir -p /tmp/src \
   && curl -fsSL -o /tmp/git-crypt.tar.gz \
     "https://github.com/AGWA/git-crypt/archive/${VERSION}.tar.gz" \
   && tar ixzf /tmp/git-crypt.tar.gz -C /tmp/src --strip-components 1 \
-  && cd /tmp/src \
-  && make -j$(nproc) \
+  && make -j"$(nproc)" \
   && make install \
   && apt-get remove -y ${EXTRA_INSTALL_ARG} \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
@@ -32,6 +34,8 @@ RUN \
   && update-ca-certificates
 
 USER kah
+
+WORKDIR /config
 
 COPY ./apps/git-crypt/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]

@@ -56,7 +56,7 @@ USER root
 COPY --from=builder /usr/local/bin/transmission-daemon /app/transmission-daemon
 COPY --from=builder /usr/local/share/transmission/web /web
 
-# hadolint ignore=DL3008
+# hadolint ignore=DL3008,DL3015
 RUN \
   apt-get -qq update \
   && \
@@ -68,8 +68,10 @@ RUN \
     rsync \
     unrar \
     unzip \
-  && echo "UpdateMethod=docker\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && apt-get autoremove -y \
+  && \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get autoremove -y \
   && apt-get clean \
   && \
   rm -rf \
@@ -78,7 +80,7 @@ RUN \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
   && chmod -R u=rwX,go=rX /web \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah

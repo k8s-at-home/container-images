@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
 ARG TARGETPLATFORM
@@ -5,6 +6,7 @@ ARG VERSION
 
 USER root
 
+# hadolint ignore=DL3008,DL3015,SC2086
 RUN \
   apt-get -qq update \
   && \
@@ -23,8 +25,10 @@ RUN \
   && \
   rm -rf \
     /app/readarr.Update* \
-  && echo "UpdateMethod=docker\nBranch=nightly\nPackageVersion=${VERSION}\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" > /app/package_info \
-  && apt-get autoremove -y \
+  && \
+  printf "UpdateMethod=docker\nBranch=nightly\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get autoremove -y \
   && apt-get clean \
   && \
   rm -rf \
@@ -32,7 +36,7 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && echo umask ${UMASK} >> /etc/bash.bashrc \
+  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah
