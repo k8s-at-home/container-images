@@ -45,6 +45,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.changes.outputs.matrix) }}
       fail-fast: true
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
     steps:
     - uses: brpaz/hadolint-action@v1.2.1
       with:
@@ -143,7 +144,6 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache
         mv /tmp/.buildx-cache-new /tmp/.buildx-cache | exit 0
-
 
     # Run GOSS tests if included with the container
     - name: Run GOSS tests
