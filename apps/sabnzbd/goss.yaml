@@ -10,4 +10,4 @@ http:
   http://localhost:8080/sabnzbd:
     status: 200
     body:
-      - '<title data-bind="text: title">SABnzbd</title>'
+      - '<title>SABnzbd Quick-Start Wizard</title>'
