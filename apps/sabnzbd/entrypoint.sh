@@ -8,6 +8,12 @@ if [[ ! -f "/config/sabnzbd.ini" ]]; then
     printf "Copying over default configuration ... "
     mkdir -p /config/sabnzbd
     cp /app/sabnzbd.ini /config/sabnzbd.ini
+    
+    printf "Creating api keys ... "
+    api_key=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
+    nzb_key=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
+    sed -i -e "s/^api_key *=.*$/api_key = ${api_key}/g" /config/sabnzbd.ini
+    sed -i -e "s/^nzb_key *=.*$/nzb_key = ${nzb_key}/g" /config/sabnzbd.ini
 fi
 
 if [[ -n ${HOST_WHITELIST_ENTRIES} ]]; then
