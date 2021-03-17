@@ -3,7 +3,7 @@ process:
     running: true
 
 port:
-  tcp6:8080:
+  tcp:8080:
     listening: true
 
 http:
