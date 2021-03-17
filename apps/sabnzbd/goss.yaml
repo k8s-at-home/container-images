@@ -1,0 +1,13 @@
+process:
+  python3:
+    running: true
+
+port:
+  tcp6:8080:
+    listening: true
+
+http:
+  http://localhost:8080/sabnzbd:
+    status: 200
+    body:
+      - '<title data-bind="text: title">SABnzbd</title>'
