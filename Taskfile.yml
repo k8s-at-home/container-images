@@ -1,0 +1,95 @@
+---
+version: '3'
+
+vars:
+  GIT_ROOT:
+    sh: git rev-parse --show-toplevel
+
+tasks:
+
+  build:
+    desc: Build an app container image using Docker
+    cmds:
+      - task: _build
+        vars: {TAG: '{{ default "test" .TAG }}'}
+    deps:
+      - task: _check-app
+      - task: _check-dir
+      - task: _check-dockerfile
+    silent: true
+
+  load:
+    desc: Load an app container image using Docker
+    cmds:
+      - task: _load
+        vars: {TAG: '{{ default "test" .TAG }}'}
+    deps:
+      - task: _check-app
+      - task: _check-dir
+      - task: _check-dockerfile
+    silent: true
+
+  _build:
+    cmds:
+      - task: _check-platform
+        vars: {PLATFORM: "{{ .PLATFORM }}"}
+      - task: _check-version
+        vars: {VERSION: "{{ .VERSION }}"}
+      - >-
+        docker buildx build -t "{{ .APP }}:{{ .TAG }}"
+        --platform "{{ .PLATFORM }}"
+        -f ./apps/"{{ .APP }}"/Dockerfile .
+    vars:
+      PLATFORM:
+        sh: cat "{{ .GIT_ROOT }}/apps/{{ .APP }}/PLATFORM"
+      VERSION:
+        sh: cat "{{ .GIT_ROOT }}/apps/{{ .APP }}/VERSION"
+    silent: true
+
+  _load:
+    cmds:
+      - task: _check-version
+        vars: {VERSION: "{{ .VERSION }}"}
+      - >-
+        docker buildx build -t "{{ .APP }}:{{ .TAG }}"
+        -f ./apps/"{{ .APP }}"/Dockerfile . --load
+    vars:
+      VERSION:
+        sh: cat "{{ .GIT_ROOT }}/apps/{{ .APP }}/VERSION"
+    silent: true
+
+  _check-app:
+    cmds:
+      - test -n "{{ .APP }}" || (echo "Please define APP parameter"; exit 1)
+    silent: true
+
+  _check-dockerfile:
+    cmds:
+      - >-
+        test -f "./apps/{{ .APP }}/Dockerfile" ||
+        (echo "The Dockerfile does not exist"; exit 1)
+    silent: true
+
+  _check-dir:
+    cmds:
+      - >-
+        test -d "./apps/{{ .APP }}" ||
+        (echo "The app directory does not exist"; exit 1)
+    silent: true
+
+  _check-version:
+    cmds:
+      - test -n "{{ .VERSION }}" || (echo "The VERSION file is empty"; exit 1)
+    silent: true
+
+  _check-platform:
+    cmds:
+      - >-
+        test -n "{{ .PLATFORM }}" ||
+        (echo "The PLATFORM file is empty"; exit 1)
+    silent: true
+
+  default:
+    cmds:
+    - task -l
+    silent: true
