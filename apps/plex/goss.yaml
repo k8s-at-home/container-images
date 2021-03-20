@@ -1,0 +1,8 @@
+---
+process:
+  Plex Media Serv:
+    running: true
+
+port:
+  tcp:32400:
+    listening: true

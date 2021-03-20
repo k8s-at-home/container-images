@@ -2,3 +2,9 @@
 process:
   EmbyServer:
     running: true
+
+http:
+  http://localhost:8096/web:
+    status: 200
+    body:
+    - '<title>Emby</title>'

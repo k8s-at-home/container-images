@@ -3,11 +3,11 @@ process:
     running: true
 
 port:
-  tcp6:8686:
+  tcp:8686:
     listening: true
 
 http:
   http://localhost:8686:
     status: 200
     body:
-      - '<title>Lidarr</title>'
+    - '<title>Lidarr</title>'
