@@ -50,7 +50,7 @@ RUN \
     tini \
     tzdata \
     vim \
-  && locale-gen en_US.UTF-8 \
+  && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
   && apt-get clean \
@@ -62,12 +62,17 @@ RUN \
     /var/cache/apt/* \
     /var/tmp/*
 
+ENV \
+  LC_ALL=en_US.UTF-8 \
+  LANG=en_US.UTF-8 \
+  LANGUAGE=en_US:en
+
 USER kah
 
 VOLUME [ "/config" ]
 
 COPY ./base/ubuntu/shim /shim
-ENTRYPOINT [ "/sbin/tini", "--" ]
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 LABEL "maintainer"="Devin Buhl <devin.kray@gmail.com>, Bernd Schorgers <me@bjw-s.dev>"
 LABEL "org.opencontainers.image.source"="https://github.com/k8s-at-home/container-images"
