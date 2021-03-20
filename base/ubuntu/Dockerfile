@@ -11,7 +11,10 @@ ENV \
   DEBIAN_FRONTEND="noninteractive" \
   APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn \
   TINI_VERSION=0.19.0 \
-  UMASK=0002
+  UMASK=0002 \
+  LANG=en_US.UTF-8 \
+  LANGUAGE=en_US:en \
+  LC_ALL=en_US.UTF-8
 
 RUN \
   adduser kah \
@@ -50,9 +53,9 @@ RUN \
     tini \
     tzdata \
     vim \
-  && dpkg-reconfigure locales \
   && locale-gen en_US.UTF-8 \
-  && /usr/sbin/update-locale LANG=en_US.UTF-8 \
+  && update-locale \
+  && dpkg-reconfigure -f noninteractive locales \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
   && apt-get clean \
@@ -63,8 +66,6 @@ RUN \
     /var/lib/apt/lists/* \
     /var/cache/apt/* \
     /var/tmp/*
-
-ENV LC_ALL en_US.UTF-8
 
 USER kah
 
