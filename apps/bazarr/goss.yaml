@@ -6,3 +6,10 @@ process:
 port:
   tcp:6767:
     listening: true
+
+# # TODO fix this test
+# http:
+#   http://localhost:6767:
+#     status: 200
+#     body:
+#     - '<title>Bazarr</title>'

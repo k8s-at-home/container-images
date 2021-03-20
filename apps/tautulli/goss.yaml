@@ -6,3 +6,10 @@ process:
 port:
   tcp:8181:
     listening: true
+
+# # TODO fix this test
+# http:
+#   http://localhost:8181:
+#     status: 200
+#     body:
+#     - '<title>Tautulli</title>'
