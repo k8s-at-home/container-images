@@ -1,9 +1,10 @@
+---
 process:
   jackett:
     running: true
 
 port:
-  tcp:9117:
+  tcp6:9117:
     listening: true
 
 http:

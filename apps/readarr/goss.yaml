@@ -1,9 +1,10 @@
+---
 process:
   Readarr:
     running: true
 
 port:
-  tcp:8686:
+  tcp6:8686:
     listening: true
 
 http:

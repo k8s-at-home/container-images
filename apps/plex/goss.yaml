@@ -4,5 +4,5 @@ process:
     running: true
 
 port:
-  tcp:32400:
+  tcp6:32400:
     listening: true

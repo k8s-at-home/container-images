@@ -1,8 +1,8 @@
 ---
 process:
-  python3:
+  transmission-da:
     running: true
 
 port:
-  tcp:6767:
+  tcp:9091:
     listening: true
