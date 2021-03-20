@@ -50,8 +50,9 @@ RUN \
     tini \
     tzdata \
     vim \
-  && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
-  && locale-gen \
+  && dpkg-reconfigure locales \
+  && locale-gen en_US.UTF-8 \
+  && /usr/sbin/update-locale LANG=en_US.UTF-8 \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
   && apt-get clean \
@@ -63,10 +64,7 @@ RUN \
     /var/cache/apt/* \
     /var/tmp/*
 
-ENV \
-  LC_ALL=en_US.UTF-8 \
-  LANG=en_US.UTF-8 \
-  LANGUAGE=en_US:en
+ENV LC_ALL en_US.UTF-8
 
 USER kah
 
