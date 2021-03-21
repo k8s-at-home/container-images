@@ -1,6 +1,6 @@
 # Container Images
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 These [container images](https://github.com/k8s-at-home/container-images) are tailored for Kubernetes.
@@ -37,6 +37,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://schouten-lebbing.nl"><img src="https://avatars.githubusercontent.com/u/7613738?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kjeld Schouten-Lebbing</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=Ornias1993" title="Code">💻</a></td>
     <td align="center"><a href="https://nicholaswilde.github.io/"><img src="https://avatars.githubusercontent.com/u/600019?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nicholas Wilde</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=nicholaswilde" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/angelnu"><img src="https://avatars.githubusercontent.com/u/4406403?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vegetto</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=angelnu" title="Code">💻</a></td>
+    <td align="center"><a href="http://anthonyrabbito.com"><img src="https://avatars.githubusercontent.com/u/25143877?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anthony Rabbito</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=anthr76" title="Code">💻</a></td>
   </tr>
 </table>
 
