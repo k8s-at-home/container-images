@@ -11,4 +11,4 @@ http:
   http://localhost:9696:
     status: 200
     body:
-    - '<title>Prowlarr</title>'
+    - '<title>Prowlarr (Preview)</title>'
