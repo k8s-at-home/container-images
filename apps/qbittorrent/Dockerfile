@@ -62,8 +62,8 @@ RUN \
 
 # Compile qbitorrent
 RUN \
-  git clone --depth 1 -b release-${VERSION} https://github.com/qbittorrent/qBittorrent.git . \
-  && ./configure ${EXTRA_CFG_ARG} --disable-gui --disable-stacktrace --disable-qt-dbus \
+  git clone --depth 1 -b "release-${VERSION}" https://github.com/qbittorrent/qBittorrent.git . \
+  && ./configure "${EXTRA_CFG_ARG}" --disable-gui --disable-stacktrace --disable-qt-dbus \
   && make \
   && make install \
   && strip /usr/local/bin/qbittorrent-nox -o /usr/local/bin/qbittorrent-nox-stripped
