@@ -1,11 +1,11 @@
 FROM golang:alpine AS builder
 # PODSYNC_VERSION can be changed, by passing `--build-arg PODSYNC_VERSION=<new version>` during docker build
-ARG PODSYNC_VERSION=v1
+ARG PODSYNC_VERSION=v2.4.0
 ENV PODSYNC_VERSION=${PODSYNC_VERSION}
 LABEL stage=builder
 WORKDIR /workspace
 #hadolint ignore=DL4006
-RUN wget -O - https://github.com/mxpv/podsync/archive/${PODSYNC_VERSION}.tar.gz | tar -xz --strip-components=1
+RUN wget -O - https://github.com/mxpv/podsync/archive/refs/tags/${PODSYNC_VERSION}.tar.gz | tar -xz --strip-components=1
 RUN go build -o /bin/podsync ./cmd/podsync
 
 
