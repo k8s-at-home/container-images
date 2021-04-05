@@ -29,7 +29,10 @@ RUN \
     ca-certificates \
     ffmpeg \
     tzdata \
-    youtube-dl
+    ffmpeg \
+    python3-pip
+
+RUN pip3 install youtube-dl
 
 COPY --from=builder /bin/podsync .
 
