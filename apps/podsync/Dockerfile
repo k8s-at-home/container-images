@@ -1,4 +1,4 @@
-FROM golang:alpine AS builder
+FROM golang:1.16.3-buster AS builder
 # PODSYNC_VERSION can be changed, by passing `--build-arg PODSYNC_VERSION=<new version>` during docker build
 ARG PODSYNC_VERSION=v2.4.0
 ENV PODSYNC_VERSION=${PODSYNC_VERSION}
