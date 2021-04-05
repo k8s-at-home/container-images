@@ -1,12 +1,24 @@
-FROM golang:1.16.3-buster AS builder
-# PODSYNC_VERSION can be changed, by passing `--build-arg PODSYNC_VERSION=<new version>` during docker build
-ARG PODSYNC_VERSION=v2.4.0
-ENV PODSYNC_VERSION=${PODSYNC_VERSION}
-LABEL stage=builder
+FROM golang:1.16 as builder
+
+ENV CGO_ENABLED=0 \
+    GOPATH=/go \
+    GOBIN=/go/bin \
+    GO111MODULE=off
+
 WORKDIR /workspace
-#hadolint ignore=DL4006
-RUN wget -O - https://github.com/mxpv/podsync/archive/refs/tags/${PODSYNC_VERSION}.tar.gz | tar -xz --strip-components=1
-RUN go build -o /bin/podsync ./cmd/podsync
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN \
+  export GOOS \
+  && GOOS=$(echo ${TARGETPLATFORM} | cut -d / -f1) \
+  && export GOARCH \
+  && GOARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
+  && export GOARM \
+  && GOARM=$(echo ${TARGETPLATFORM} | cut -d / -f3 | cut -c2-) \
+  git clone https://github.com/mxpv/podsync.git . \
+  && git checkout ${VERSION} \
+  && go build -o /bin/podsync ./cmd/podsync
 
 
 # hadolint ignore=DL3007
@@ -20,6 +32,8 @@ USER root
 
 WORKDIR /app
 
+COPY --from=builder /bin/podsync .
+
 # Install system dependencies
 # hadolint ignore=DL3008
 RUN \
@@ -30,18 +44,24 @@ RUN \
     ffmpeg \
     tzdata \
     ffmpeg \
-    python3-pip
-
-RUN pip3 install youtube-dl
-
-COPY --from=builder /bin/podsync .
-
-RUN printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info
-
-RUN \
-  chmod -R u=rwX,go=rX /app \
+    python3-pip \
+  && \
+  printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
+  && \
+  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && apt-get autoremove -y \
+  && apt-get clean \
+  && \
+  rm -rf \
+    /tmp/* \
+    /var/lib/apt/lists/* \
+    /var/cache/apt/* \
+    /var/tmp/ \
+  && chmod -R u=rwX,go=rX /app \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
-  && update-ca-certificates
+  && update-ca-certificates \
+  && pip3 install youtube-dl
+
 
 USER kah
 
