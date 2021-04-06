@@ -3,9 +3,12 @@ FROM golang:1.16 as builder
 ENV CGO_ENABLED=0 \
     GOPATH=/go \
     GOBIN=/go/bin \
-    GO111MODULE=off
+    GO111MODULE=on
 
 WORKDIR /workspace
+
+ARG TARGETPLATFORM
+ARG VERSION
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -16,7 +19,7 @@ RUN \
   && GOARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
   && export GOARM \
   && GOARM=$(echo ${TARGETPLATFORM} | cut -d / -f3 | cut -c2-) \
-  git clone https://github.com/mxpv/podsync.git . \
+  && git clone https://github.com/mxpv/podsync.git . \
   && git checkout ${VERSION} \
   && go build -o /bin/podsync ./cmd/podsync
 
@@ -24,8 +27,6 @@ RUN \
 # hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 
-ARG TARGETPLATFORM
-ARG VERSION
 
 # hadolint ignore=DL3002
 USER root
@@ -45,6 +46,8 @@ RUN \
     tzdata \
     ffmpeg \
     python3-pip \
+  && \
+  ln -s /usr/bin/python3 /usr/bin/python \
   && \
   printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
   && \
