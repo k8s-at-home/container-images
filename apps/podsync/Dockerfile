@@ -36,6 +36,7 @@ WORKDIR /app
 COPY --from=builder /bin/podsync .
 
 # Install system dependencies
+# Instal always latest version of youtube-dl via pip
 # hadolint ignore=DL3008,DL3013
 RUN \
   apt-get -qq update \
@@ -64,7 +65,6 @@ RUN \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates \
   && pip3 install --no-cache-dir youtube-dl
-
 
 USER kah
 
