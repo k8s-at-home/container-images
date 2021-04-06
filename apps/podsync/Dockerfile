@@ -70,5 +70,7 @@ USER kah
 
 EXPOSE 8080
 
+COPY ./apps/podsync/config.toml /app/config.toml
 COPY ./apps/podsync/entrypoint.sh /entrypoint.sh
+
 CMD ["/entrypoint.sh"]
