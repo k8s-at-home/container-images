@@ -4,4 +4,9 @@
 source "/shim/umask.sh"
 source "/shim/vpn.sh"
 
-exec /app/podsync ${EXTRA_ARGS}
+if [[ ! -f "/config/config.toml" ]]; then
+    mkdir -p /config
+    cp /app/config.toml /config/config.toml
+fi
+
+exec /app/podsync --config /config/config.toml ${EXTRA_ARGS}
