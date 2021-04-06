@@ -47,8 +47,8 @@ RUN \
     tzdata \
     ffmpeg \
     python3 \
-    wget \
-  && wget -O /usr/bin/youtube-dl https://github.com/ytdl-org/youtube-dl/releases/latest/download/youtube-dl \
+  && curl -fsSL -o /usr/bin/youtube-dl \
+    "https://github.com/ytdl-org/youtube-dl/releases/latest/download/youtube-dl" \
   && chmod +x /usr/bin/youtube-dl \    
   && \
   ln -s /usr/bin/python3 /usr/bin/python \
