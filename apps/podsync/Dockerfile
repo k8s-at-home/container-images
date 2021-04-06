@@ -46,7 +46,10 @@ RUN \
     ffmpeg \
     tzdata \
     ffmpeg \
-    python3-pip \
+    python3 \
+    wget \
+  && wget -O /usr/bin/youtube-dl https://github.com/ytdl-org/youtube-dl/releases/latest/download/youtube-dl \
+  && chmod +x /usr/bin/youtube-dl \    
   && \
   ln -s /usr/bin/python3 /usr/bin/python \
   && \
@@ -63,8 +66,7 @@ RUN \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
-  && update-ca-certificates \
-  && pip3 install --no-cache-dir youtube-dl
+  && update-ca-certificates
 
 USER kah
 

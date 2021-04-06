@@ -10,5 +10,3 @@ port:
 http:
   http://localhost:8080:
     status: 200
-    body:
-    - '<title>Podsync</title>'
