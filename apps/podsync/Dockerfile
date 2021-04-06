@@ -63,7 +63,7 @@ RUN \
   && chmod -R u=rwX,go=rX /app \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates \
-  && pip3 install youtube-dl
+  && pip3 install --no-cache-dir youtube-dl
 
 
 USER kah
