@@ -36,7 +36,7 @@ WORKDIR /app
 COPY --from=builder /bin/podsync .
 
 # Install system dependencies
-# hadolint ignore=DL3008
+# hadolint ignore=DL3008,DL3013
 RUN \
   apt-get -qq update \
   && \
