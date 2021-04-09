@@ -37,7 +37,7 @@ tasks:
         vars: {VERSION: "{{ .VERSION }}"}
       - >-
         docker buildx build -t "{{ .APP }}:{{ .TAG }}"
-        --build-arg "{{ .VERSION }}"
+        --build-arg "VERSION={{ .VERSION }}"
         --platform "{{ .PLATFORM }}"
         -f ./apps/"{{ .APP }}"/Dockerfile .
     vars:
@@ -53,7 +53,7 @@ tasks:
         vars: {VERSION: "{{ .VERSION }}"}
       - >-
         docker buildx build -t "{{ .APP }}:{{ .TAG }}"
-        --build-arg "{{ .VERSION }}"
+        --build-arg "VERSION={{ .VERSION }}"
         -f ./apps/"{{ .APP }}"/Dockerfile . --load
     vars:
       VERSION:
