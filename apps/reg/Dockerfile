@@ -4,7 +4,6 @@ FROM ghcr.io/k8s-at-home/ubuntu:latest
 ARG VERSION
 ARG TARGETPLATFORM
 USER root
-
 WORKDIR /app
 
 # hadolint ignore=DL3008,DL3015,SC2086
@@ -41,4 +40,3 @@ WORKDIR /config
 COPY ./apps/reg/entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["--help"]

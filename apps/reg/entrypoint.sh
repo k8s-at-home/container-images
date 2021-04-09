@@ -4,4 +4,4 @@
 source "/shim/umask.sh"
 source "/shim/vpn.sh"
 
-exec /app/reg "${@}" "${EXTRA_ARGS}"
+exec /app/reg ${@} ${EXTRA_ARGS}
