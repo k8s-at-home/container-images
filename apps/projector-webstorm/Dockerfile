@@ -1,6 +1,8 @@
 # Build final container
 FROM ghcr.io/k8s-at-home/projector:latest
 
+ARG VERSION
+
 USER root
 
 WORKDIR /app/ide
