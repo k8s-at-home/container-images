@@ -5,7 +5,9 @@ ARG IDE_DOWNLOAD_URL
 USER root
 WORKDIR /download
 
-RUN curl -fsSL $IDE_DOWNLOAD_URL | tar -xz --strip-components 1
+RUN \
+  set -o pipefail \
+  && curl -fsSL $IDE_DOWNLOAD_URL | tar -xz --strip-components 1
 
 # Build final container
 FROM ghcr.io/k8s-at-home/projector:latest
