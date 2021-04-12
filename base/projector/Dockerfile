@@ -1,18 +1,16 @@
 # Download projector-server
 FROM ghcr.io/k8s-at-home/ubuntu:latest AS projector
 
+ARG VERSION
+
 USER root
+
 WORKDIR /download
 
-RUN apt-get update
 RUN \
   apt-get -qq update \
-  && apt-get install -y jq unzip
-
-RUN \
-     export PS_RELEASES="$(curl -s 'https://api.github.com/repos/JetBrains/projector-server/releases')" \
-  && export PS_URL=$(echo $PS_RELEASES | jq -r '. - map(select(.tag_name | contains("agent"))) | first | .assets[0].browser_download_url') \
-  && curl -fsSL -o ps.zip "$PS_URL" \
+  && apt-get install -y jq unzip \
+  && curl -fsSL -o ps.zip "https://github.com/JetBrains/projector-server/releases/download/v${VERSION}/projector-server-v${VERSION}.zip" \
   && unzip ps.zip \
   && mv projector-server-1.0-SNAPSHOT/* . \
   && rm -r ps.zip projector-server-1.0-SNAPSHOT
