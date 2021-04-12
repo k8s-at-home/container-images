@@ -7,12 +7,11 @@ USER root
 
 WORKDIR /app/ide
 
-RUN curl -fsSL "https://download.jetbrains.com/go/goland-${VERSION}.tar.gz" | tar -xz --strip-components 1
+RUN \
+     curl -fsSL "https://download.jetbrains.com/go/goland-${VERSION}.tar.gz" | tar -xz --strip-components 1 \
+  && chmod -R u=rwX,go=rX /app \
+  && chown -R kah:kah /app
 
 WORKDIR /config
-
-RUN \
-     chmod -R u=rwX,go=rX /app \
-  && chown -R kah:kah /app
 
 USER kah

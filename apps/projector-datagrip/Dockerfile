@@ -8,13 +8,10 @@ USER root
 WORKDIR /app/ide
 
 RUN \
-  set -o pipefail \
-  && curl -fsSL "https://download.jetbrains.com/datagrip/datagrip-${VERSION}.tar.gz" | tar -xz --strip-components 1
+     curl -fsSL "https://download.jetbrains.com/datagrip/datagrip-${VERSION}.tar.gz" | tar -xz --strip-components 1 \
+  && chmod -R u=rwX,go=rX /app \
+  && chown -R kah:kah /app
 
 WORKDIR /config
-
-RUN \
-  chmod -R u=rwX,go=rX /app \
-  && chown -R kah:kah /app
 
 USER kah

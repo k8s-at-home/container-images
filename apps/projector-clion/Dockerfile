@@ -8,13 +8,8 @@ USER root
 WORKDIR /app/ide
 
 RUN \
-  set -o pipefail \
-  && curl -fsSL "https://download.jetbrains.com/cpp/CLion-${VERSION}.tar.gz" | tar -xz --strip-components 1
-
-WORKDIR /config
-
-RUN \
-     apt-get -qq update \
+     curl -fsSL "https://download.jetbrains.com/cpp/CLion-${VERSION}.tar.gz" | tar -xz --strip-components 1 \
+  && apt-get -qq update \
   && apt-get -qq -y install build-essential clang \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
@@ -26,5 +21,7 @@ RUN \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app  \
   && chown -R kah:kah /app
+
+WORKDIR /config
 
 USER kah
