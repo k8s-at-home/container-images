@@ -1,14 +1,15 @@
 # Build final container
 FROM ghcr.io/k8s-at-home/projector:latest
 
-ARG IDE_DOWNLOAD_URL
+ARG VERSION
+
 USER root
 
 WORKDIR /app/ide
 
 RUN \
   set -o pipefail \
-  && curl -fsSL $IDE_DOWNLOAD_URL | tar -xz --strip-components 1
+  && curl -fsSL "https://download.jetbrains.com/idea/ideaIU-${VERSION}.tar.gz" | tar -xz --strip-components 1
 
 WORKDIR /config
 
