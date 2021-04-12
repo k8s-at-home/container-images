@@ -7,9 +7,7 @@ USER root
 
 WORKDIR /app/ide
 
-RUN \
-  set -o pipefail \
-  && curl -fsSL "https://download.jetbrains.com/go/goland-${VERSION}.tar.gz" | tar -xz --strip-components 1
+RUN curl -fsSL "https://download.jetbrains.com/go/goland-${VERSION}.tar.gz" | tar -xz --strip-components 1
 
 WORKDIR /config
 
