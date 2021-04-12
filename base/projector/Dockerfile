@@ -1,5 +1,6 @@
 # Download projector-server
-FROM ghcr.io/k8s-at-home/ubuntu:vfocal-20210401 AS projector
+# hadolint ignore=DL3007
+FROM ghcr.io/k8s-at-home/ubuntu:latest AS projector
 
 ARG VERSION
 
