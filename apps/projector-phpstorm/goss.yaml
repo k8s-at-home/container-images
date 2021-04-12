@@ -1,0 +1,14 @@
+---
+process:
+  phpstorm-projector.sh:
+    running: true
+
+port:
+  tcp:8887:
+    listening: true
+
+http:
+  http://localhost:8887:
+    status: 200
+    body:
+      - '<title>Please wait...</title>'
