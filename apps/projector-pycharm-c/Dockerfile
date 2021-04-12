@@ -26,7 +26,7 @@ RUN \
      python3 \
      python3-distutils \
      python3-pip \
-     python3-setuptools
+     python3-setuptools \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
   && apt-get clean \
