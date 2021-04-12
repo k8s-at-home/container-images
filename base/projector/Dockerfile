@@ -1,12 +1,14 @@
 # Download projector-server
-FROM ghcr.io/k8s-at-home/ubuntu:latest AS projector
+FROM ghcr.io/k8s-at-home/ubuntu:vfocal-20210401 AS projector
 
 ARG VERSION
 
+# hadolint ignore=DL3002
 USER root
 
 WORKDIR /download
 
+# hadolint ignore=DL3008,DL3015
 RUN \
   apt-get -qq update \
   && apt-get install -y jq unzip \
@@ -16,7 +18,7 @@ RUN \
   && rm -r ps.zip projector-server-1.0-SNAPSHOT
 
 # Build final container
-FROM ghcr.io/k8s-at-home/ubuntu:latest
+FROM ghcr.io/k8s-at-home/ubuntu:vfocal-20210401
 
 USER root
 WORKDIR /app
@@ -24,6 +26,7 @@ WORKDIR /app
 # copy projector-server
 COPY --from=projector /download /app/projector-server
 
+# hadolint ignore=DL3008,DL3015
 RUN \
      apt-get -qq update \
   && apt-get -qq -y install \
