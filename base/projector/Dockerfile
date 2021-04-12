@@ -56,7 +56,10 @@ USER kah
 
 EXPOSE 8887
 
+COPY ./base/projector/shim /shim
+
 COPY ./base/projector/entrypoint.sh /entrypoint.sh
+
 COPY ./base/projector/idea.properties /tmp/idea.properties
 
 CMD ["/entrypoint.sh"]
