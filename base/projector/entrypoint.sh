@@ -35,7 +35,7 @@ sed -i 's+com.intellij.idea.Main+-Dorg.jetbrains.projector.server.classToLaunch=
 export XDG_CONFIG_HOME=/config/config
 PV=$(grep -oP 'PRODUCT_VENDOR="\K(.*)(?=\"$)' "$IDE_RUN_FILE_NAME-projector.sh")
 PS=$(grep -oP 'PATHS_SELECTOR="\K(.*)(?=\"$)' "$IDE_RUN_FILE_NAME-projector.sh")
-P="/${XDG_CONFIG_HOME}/${PV}/${PS}"
+P="${XDG_CONFIG_HOME}/${PV}/${PS}"
 mkdir -p "$P"
 cp /tmp/idea.properties "${P}/idea.properties"
 
