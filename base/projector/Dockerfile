@@ -25,7 +25,7 @@ USER root
 WORKDIR /app
 
 # copy projector-server
-COPY --from=projector /download /app/projector-server
+COPY --from=projector --chown=kah:kah /download /app/projector-server
 
 # hadolint ignore=DL3008,DL3015
 RUN \
@@ -51,7 +51,6 @@ RUN \
     /var/cache/apt/* \
     /var/tmp/ \
   && chmod -R u=rwX,go=rX /app \
-  && chown -R kah:kah /app \
   && usermod -d /config kah \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
@@ -60,10 +59,10 @@ USER kah
 
 EXPOSE 8887
 
-COPY ./base/projector/shim /shim
+COPY --chown=kah:kah ./base/projector/shim /shim
 
-COPY ./base/projector/entrypoint.sh /entrypoint.sh
+COPY --chown=kah:kah ./base/projector/entrypoint.sh /entrypoint.sh
 
-COPY ./base/projector/idea.properties /tmp/idea.properties
+COPY --chown=kah:kah ./base/projector/idea.properties /tmp/idea.properties
 
 CMD ["/entrypoint.sh"]
