@@ -1,6 +1,6 @@
 ---
 process:
-  pycharm-projector.sh:
+  java:
     running: true
 
 port:

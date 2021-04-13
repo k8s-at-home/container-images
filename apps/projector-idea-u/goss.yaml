@@ -1,6 +1,6 @@
 ---
 process:
-  idea-projector.sh:
+  java:
     running: true
 
 port:

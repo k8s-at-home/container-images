@@ -1,6 +1,6 @@
 ---
 process:
-  goland-projector.sh:
+  java:
     running: true
 
 port:

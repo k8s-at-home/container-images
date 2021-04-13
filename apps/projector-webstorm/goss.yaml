@@ -1,6 +1,6 @@
 ---
 process:
-  webstorm-projector.sh:
+  java:
     running: true
 
 port:

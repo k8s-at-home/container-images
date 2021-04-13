@@ -1,6 +1,6 @@
 ---
 process:
-  phpstorm-projector.sh:
+  java:
     running: true
 
 port:
