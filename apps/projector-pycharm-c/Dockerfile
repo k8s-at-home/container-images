@@ -1,5 +1,6 @@
 # Build final container
-FROM ghcr.io/k8s-at-home/projector:1.1.2
+# hadolint ignore=DL3007
+FROM ghcr.io/k8s-at-home/projector:latest
 
 ARG VERSION
 
@@ -9,7 +10,7 @@ WORKDIR /app/ide
 
 # hadolint ignore=DL4006,DL3015,DL3008
 RUN \
-     curl -fsSL "https://download.jetbrains.com/python/pycharm-community-${VERSION}.tar.gz" | tar -xz --strip-components 1 \
+     curl -fsSL "https://download.jetbrains.com/python/pycharm-community-${VERSION#*v}.tar.gz" | tar -xz --strip-components 1 \
   && apt-get -qq update \
   && apt-get -qq -y install \
      python2 \
