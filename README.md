@@ -1,6 +1,6 @@
 # Container Images
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 These [container images](https://github.com/k8s-at-home/container-images) are tailored for Kubernetes.
@@ -40,6 +40,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://anthonyrabbito.com"><img src="https://avatars.githubusercontent.com/u/25143877?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anthony Rabbito</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=anthr76" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/bjw-s"><img src="https://avatars.githubusercontent.com/u/6213398?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bᴇʀɴᴅ Sᴄʜᴏʀɢᴇʀs</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=bjw-s" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/onedr0p"><img src="https://avatars.githubusercontent.com/u/213795?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ᗪєνιη ᗷυнʟ</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=onedr0p" title="Code">💻</a></td>
+    <td align="center"><a href="https://cajun.pro"><img src="https://avatars.githubusercontent.com/u/15788890?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nicholas St. Germain</b></sub></a><br /><a href="https://github.com/k8s-at-home/container-images/commits?author=DirtyCajunRice" title="Code">💻</a></td>
   </tr>
 </table>
 
