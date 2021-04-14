@@ -19,6 +19,6 @@ if [[ -n "$ORG_JETBRAINS_PROJECTOR_SERVER_SSL_PROPERTIES_PATH" ]]; then
         -srcstorepass "${key_pass}" \
         -srcstoretype pkcs12 \
         -destkeystore "${jks_path}" \
-        -deststorepass "${jks_pass}"
+        -deststorepass "${jks_pass}" \
         -deststoretype jks
 fi
