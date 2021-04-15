@@ -3,8 +3,8 @@ FROM ghcr.io/k8s-at-home/ubuntu:latest AS builder
 ARG VERSION
 WORKDIR /tmp
 ARG FILENAME="${VERSION}.tar.gz"
-USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
   echo "**** install packages ****" \
   && \
@@ -16,7 +16,7 @@ RUN \
   && \
   echo "**** download haste ****" \
   && \
-  wget "https://github.com/zneix/haste-server/archive/${VERSION}.tar.gz" && \
+  wget -q "https://github.com/zneix/haste-server/archive/${VERSION}.tar.gz" && \
   tar -xvf "${VERSION}.tar.gz" -C /app --strip-components 1
 WORKDIR /app
 RUN \
@@ -27,11 +27,13 @@ RUN \
   mkdir /app/data && \
   npm run-script build
 
+# hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
 ARG VERSION
 ENV NODE_ENV=production
 ENV APP_DIR="/app"
 USER root
+# hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
   echo "**** install packages ****" \
   && \
