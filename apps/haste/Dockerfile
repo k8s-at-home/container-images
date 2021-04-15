@@ -41,7 +41,9 @@ RUN \
   && \
   apt-get update \
   && \
-  apt-get install -y --no-install-recommends \
+  curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+  && \
+  apt-get install -y \
     nodejs \
   && \
   printf "UpdateMethod=docker\nPackageVersion=%s\nPackageAuthor=[Team k8s-at-home](https://github.com/k8s-at-home)" "${VERSION}" > /app/package_info \
