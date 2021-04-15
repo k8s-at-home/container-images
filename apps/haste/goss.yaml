@@ -1,0 +1,14 @@
+---
+process:
+  node:
+    running: true
+
+port:
+  tcp:7777:
+    listening: true
+
+http:
+  http://localhost:7777:
+    status: 200
+    body:
+      - '<title>hastebin</title>'
