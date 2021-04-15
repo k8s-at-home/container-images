@@ -35,6 +35,7 @@ ARG VERSION
 ENV NODE_ENV=production
 ENV APP_DIR="/app"
 USER root
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
   echo "**** install packages ****" \
