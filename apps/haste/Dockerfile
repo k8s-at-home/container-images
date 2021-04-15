@@ -3,6 +3,8 @@ FROM ghcr.io/k8s-at-home/ubuntu:latest AS builder
 ARG VERSION
 WORKDIR /tmp
 ARG FILENAME="${VERSION}.tar.gz"
+# hadolint ignore=DL3002
+USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008,DL3015,SC2039,SC2086
 RUN \
