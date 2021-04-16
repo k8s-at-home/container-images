@@ -8,8 +8,8 @@ ARG VERSION
 USER root
 
 ENV NVIDIA_DRIVER_CAPABILITIES="compute,video,utility" \
-    INTEL_NEO_VERSION=20.48.18558 \
-    INTEL_IGC_VERSION=1.0.5699 \
+    INTEL_NEO_VERSION=21.11.19310 \
+    INTEL_IGC_VERSION=1.0.6646 \
     INTEL_GMMLIB_VERSION=20.3.2 \
     PLEX_DOWNLOAD="https://downloads.plex.tv/plex-media-server-new" \
     PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/config/Library/Application Support" \
