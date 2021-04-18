@@ -47,7 +47,7 @@ RUN \
   && update-ca-certificates
 
 # You can specify your own user and group, while retaining all specified permissions, by setting:
-# securityContext.supplementalGroup[568]
+# securityContext.supplementalGroup: [568]
 USER kah
 
 EXPOSE 9117
