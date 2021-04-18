@@ -46,7 +46,7 @@ RUN \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
-# You can specify your own user and group, while retaining write-access to /config, by setting:
+# You can specify your own user and group, while retaining all specified permissions, by setting:
 # securityContext.supplementalGroup[568]
 USER kah
 
