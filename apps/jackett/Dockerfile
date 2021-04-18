@@ -41,10 +41,13 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/ \
+  && chown -R kah:kah /app \
   && chmod -R u=rwX,go=rX /app \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
+# You can specify your own user and group, while retaining write-access to /config, by setting:
+# securityContext.supplementalGroup[568]
 USER kah
 
 EXPOSE 9117
