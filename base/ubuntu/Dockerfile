@@ -24,6 +24,7 @@ RUN \
   && \
   mkdir -p /config \
   && chown -R kah:kah /config
+  && chmod -R 775 /config
 
 WORKDIR /app
 
@@ -63,6 +64,7 @@ RUN \
   && ln -s /usr/local/bin/micro /usr/local/bin/emacs \
   && unset MICRO_ARCH \
   && unset MICRO_VERSION \
+  && chown -R kah:kah /app
   && \
   printf "/bin/bash /shim/greeting.sh\n" >> /etc/bash.bashrc \
   && \
