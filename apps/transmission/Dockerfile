@@ -79,6 +79,8 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/ \
+  && chown -R kah:kah /app \
+  && chown -R kah:kah /web \
   && chmod -R u=rwX,go=rX /app \
   && chmod -R u=rwX,go=rX /web \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \

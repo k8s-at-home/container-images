@@ -76,11 +76,14 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/ \
-  && chmod -R u=rwX,go=rX /app \
+  && chown -R kah:kah "${PLEX_MEDIA_SERVER_HOME}" \
+  && chmod -R u=rwX,go=rX "${PLEX_MEDIA_SERVER_HOME}" \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
 
 USER kah
+
+WORKDIR "${PLEX_MEDIA_SERVER_HOME}"
 
 EXPOSE 32400/tcp 1900/udp 3005/tcp 5353/udp 8324/tcp 32410/udp 32412/udp 32413/udp 32414/udp 32469/tcp
 

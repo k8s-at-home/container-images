@@ -59,6 +59,7 @@ RUN \
     /tmp/* \
     /var/lib/apt/lists/* \
     /var/tmp/ \
+  && chown -R kah:kah "${APP_DIR}" \
   && chmod -R u=rwX,go=rX "${APP_DIR}" \
   && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
   && update-ca-certificates
