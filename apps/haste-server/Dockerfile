@@ -107,5 +107,5 @@ WORKDIR /app
 VOLUME /app
 USER kah
 EXPOSE ${PORT}
-COPY ./apps/haste/entrypoint.sh /entrypoint.sh
+COPY ./apps/haste-server/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
