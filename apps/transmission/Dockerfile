@@ -35,6 +35,7 @@ RUN \
     dirmngr
 
 # Install golang and envsubst
+# hadolint ignore=DL3008
 RUN \
   add-apt-repository ppa:longsleep/golang-backports \
   && apt-get update \
