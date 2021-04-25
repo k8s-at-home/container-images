@@ -29,7 +29,23 @@ RUN \
     libminiupnpc-dev \
     libssh-dev \
     libtool \
-    pkg-config
+    pkg-config \
+    software-properties-common \
+    gpg \
+    dirmngr
+
+# Install golang and envsubst
+RUN \
+  add-apt-repository ppa:longsleep/golang-backports \
+  && apt-get update \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 52B59B1571A79DBC054901C0F6BC817356A3D45E \
+  && apt-get install -y --no-install-recommends \
+    golang-1.16 \
+  && export GOPATH=/go \
+  && export PATH=$PATH:/go/bin \
+  && /usr/lib/go-1.16/bin/go get github.com/a8m/envsubst/cmd/envsubst
+
+WORKDIR /tmp/transmission
 
 # Compile transmission
 RUN \
@@ -56,6 +72,7 @@ USER root
 
 COPY --from=builder /usr/local/bin/transmission-daemon /app/transmission-daemon
 COPY --from=builder /usr/local/share/transmission/web /web
+COPY --from=builder /go/bin/envsubst /usr/local/bin/envsubst
 
 # hadolint ignore=DL3008,DL3015
 RUN \
@@ -88,5 +105,6 @@ USER kah
 
 EXPOSE ${WEBUI_PORT} 51413
 
+COPY ./apps/transmission/settings.json.tmpl /app/settings.json.tmpl
 COPY ./apps/transmission/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]
