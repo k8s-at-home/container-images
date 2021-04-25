@@ -2,11 +2,25 @@
 
 set -e
 
-source "/shim/iptables-backend.sh"
+INTERFACE_UP=false
 
-if [[ "$(cat /proc/sys/net/ipv4/conf/all/src_valid_mark)" != "1" ]]; then
-    echo "[WARNING] sysctl net.ipv4.conf.all.src_valid_mark=1 is not set" >&2
-fi
+_shutdown () {
+    local exitCode=$?
+    if [[ ${exitCode} -gt 0 ]]; then
+        echo "[ERROR] Received non-zero exit code (${exitCode}) executing the command "${BASH_COMMAND}" on line ${LINENO}."
+    else
+        echo "[INFO] Caught signal to shutdown."
+    fi
+    
+    if [[ "${INTERFACE_UP}" == 'true' ]]; then
+        echo "[INFO] Shutting down VPN!"
+        sudo /usr/bin/wg-quick down "${INTERFACE}"
+    fi
+}
+
+trap _shutdown EXIT
+
+source "/shim/iptables-backend.sh"
 
 CONFIGS=`sudo /usr/bin/find /etc/wireguard -type f -printf "%f\n"`
 if [[ -z "${CONFIGS}" ]]; then
@@ -18,15 +32,9 @@ CONFIG=`echo $CONFIGS | head -n 1`
 INTERFACE="${CONFIG%.*}"
 
 sudo /usr/bin/wg-quick up "${INTERFACE}"
+INTERFACE_UP=true
 
 source "/shim/killswitch.sh"
-
-_shutdown () {
-    echo "[INFO] Caught signal, shutting down VPN!"
-    sudo /usr/bin/wg-quick down "${INTERFACE}"
-}
-
-trap _shutdown SIGTERM SIGINT SIGQUIT
 
 sleep infinity &
 wait $!

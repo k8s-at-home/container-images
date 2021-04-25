@@ -6,6 +6,10 @@ SEPARATOR=${SEPARATOR:-";"}
 if
     [[ "${KILLSWITCH}" == "true" ]];
 then
+    if [[ "$(cat /proc/sys/net/ipv4/conf/all/src_valid_mark)" != "1" ]]; then
+        echo "[WARNING] sysctl net.ipv4.conf.all.src_valid_mark=1 is not set. This may prevent the killswitch from working properly and may prevent outbound network access." >&2
+    fi
+
     # IPv4 killswitch
     DEFAULTROUTE_IPV4=$(/usr/sbin/ip -4 route | grep default | awk '{print $3}')
     KILLSWITCH_EXCLUDEDNETWORKS_IPV4=${KILLSWITCH_EXCLUDEDNETWORKS_IPV4:-""}
@@ -17,8 +21,8 @@ then
         for entry in "${networks[@]}"
         do
             echo "[INFO] Excluding ${entry} from VPN IPv4 traffic"
-            sudo /usr/sbin/ip -4 route add "${entry}" via "${DEFAULTROUTE_IPV4}"
-            sudo /usr/sbin/iptables -A OUTPUT -d "${entry}" -j ACCEPT
+            sudo /usr/sbin/ip -4 route add "${entry}" via "${DEFAULTROUTE_IPV4}" || echo "[WARNING] Received non-zero exit code adding route ${entry} via ${DEFAULTROUTE_IPV4}"
+            sudo /usr/sbin/iptables -A OUTPUT -d "${entry}" -j ACCEPT || echo "[WARNING] Received non-zero exit code adding iptables rule to ACCEPT ${entry}"
         done
 
         sudo /usr/sbin/iptables -A OUTPUT ! -o "${INTERFACE}" -m mark ! --mark $(sudo /usr/bin/wg show "${INTERFACE}" fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
@@ -35,8 +39,8 @@ then
         for entry in "${networks[@]}"
         do
             echo "[INFO] Excluding ${entry} from VPN IPv6 traffic"
-            sudo /usr/sbin/ip -6 route add "${entry}" via "${DEFAULTROUTE_IPV6}"
-            sudo /usr/sbin/ip6tables -A OUTPUT -d "${entry}" -j ACCEPT
+            sudo /usr/sbin/ip -6 route add "${entry}" via "${DEFAULTROUTE_IPV6}" || echo "[WARNING] Received non-zero exit code adding route ${entry} via ${DEFAULTROUTE_IPV6}"
+            sudo /usr/sbin/ip6tables -A OUTPUT -d "${entry}" -j ACCEPT || echo "[WARNING] Received non-zero exit code adding iptables rule to ACCEPT ${entry}"
         done
 
         sudo /usr/sbin/ip6tables -A OUTPUT ! -o "${INTERFACE}" -m mark ! --mark $(sudo /usr/bin/wg show "${INTERFACE}" fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
