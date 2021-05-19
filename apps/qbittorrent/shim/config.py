@@ -5,7 +5,7 @@ from os import environ as env
 CONFIG_FILE = '/config/qBittorrent/qBittorrent.conf'
 
 c = ConfigParser()
-
+c.optionxform = str
 c.read(CONFIG_FILE)
 cfg_keys = [k[4:] for k in env if k.startswith('QBT_')]
 
