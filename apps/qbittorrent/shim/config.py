@@ -10,7 +10,7 @@ c.read(CONFIG_FILE)
 cfg_keys = [k[4:] for k in env if k.startswith('QBT_')]
 
 for cfg_key in cfg_keys:
-    cfg = cfg_key.split('_')
+    cfg = cfg_key.split('__')
     s = cfg[0]
     k = '\\'.join(cfg[1:])
     if s not in c:
