@@ -25,14 +25,11 @@ RUN \
     mosquitto \
     mosquitto-clients \
     dart \
-  && mkdir -p /var/run/leaf2mqtt \
   && git clone https://github.com/Troon/leaf2mqtt.git . \
   && dart pub get \
-  && dart compile exe leaf2mqtt.dart -o /var/run/leaf2mqtt/leaf2mqtt.exe \
-  && dart compile exe leaf_climate.dart -o /var/run/leaf2mqtt/leaf_climate.exe \
-  && cp leaf2mqtt.sh /var/run/leaf2mqtt \
-  && chown -R kah:kah /var/run/leaf2mqtt \
-  && chmod +x /var/run/leaf2mqtt/* \
+  && dart compile exe leaf2mqtt.dart -o /root/leaf2mqtt.exe \
+  && dart compile exe leaf_climate.dart -o /root/leaf_climate.exe \
+  && cp leaf2mqtt.sh /root \
   && apt-get remove -y ${BUILD_DEPS} dart \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
@@ -45,6 +42,5 @@ RUN \
 
 WORKDIR /var/run/leaf2mqtt
 
-USER kah
 COPY ./apps/leaf2mqtt/entrypoint.sh /entrypoint.sh
 CMD ["/entrypoint.sh"]

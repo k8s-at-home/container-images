@@ -1,0 +1,4 @@
+---
+process:
+  leaf2mqtt.exe:
+    running: true
