@@ -32,6 +32,7 @@ RUN \
   && dart compile exe leaf_climate.dart -o /var/run/leaf2mqtt/leaf_climate.exe \
   && cp leaf2mqtt.sh /var/run/leaf2mqtt \
   && chown -R kah:kah /var/run/leaf2mqtt \
+  && chmod +x /var/run/leaf2mqtt/* \
   && apt-get remove -y ${BUILD_DEPS} dart \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get autoremove -y \
