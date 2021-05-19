@@ -9,6 +9,8 @@ if [[ ! -f "/config/qBittorrent/qBittorrent.conf" ]]; then
     cp /app/qBittorrent.conf /config/qBittorrent/qBittorrent.conf
 fi
 
+python3 /shim/config.py
+
 if [[ ! -d "/config/qBittorrent/logs" ]]; then
     mkdir -p /config/qBittorrent/logs
 fi

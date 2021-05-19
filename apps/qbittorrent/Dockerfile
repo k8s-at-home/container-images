@@ -132,5 +132,8 @@ EXPOSE 6881 6881/udp ${WEBUI_PORT}
 
 COPY ./apps/qbittorrent/qBittorrent.conf /app/qBittorrent.conf
 
+COPY ./apps/qbittorrent/shim/config.py /shim/config.py
+
 COPY ./apps/qbittorrent/entrypoint.sh /entrypoint.sh
+
 CMD ["/entrypoint.sh"]
