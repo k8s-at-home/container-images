@@ -9,4 +9,4 @@ RUN \
   && pub get \
   && pub get --offline 
 
-ENTRYPOINT ["/usr/bin/dart", "src/leaf2mqtt.dart"]
+ENTRYPOINT ["/usr/bin/dart", "src/leaf_2_mqtt.dart"]
