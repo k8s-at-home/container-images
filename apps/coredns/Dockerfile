@@ -69,4 +69,4 @@ USER kah
 
 EXPOSE 53 53/udp
 
-CMD ["/app/coredns", "-conf", "/config/Coredns"]
+CMD ["/app/coredns", "-conf", "/config/Corefile"]
