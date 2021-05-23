@@ -23,6 +23,7 @@ RUN \
   && git checkout ${VERSION} \
   && go get github.com/openshift/coredns-mdns \
   && go get github.com/coredns/alternate \
+  && go get github.com/jwhited/wgsd \
   && go mod tidy
 
 COPY ./apps/coredns/plugin.cfg plugin.cfg
