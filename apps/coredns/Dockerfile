@@ -11,6 +11,7 @@ ENV CGO_ENABLED=0 \
 
 WORKDIR /go/src/coredns
 
+# hadolint ignore=DL4006
 RUN \
   export GOOS \
   && GOOS=$(echo ${TARGETPLATFORM} | cut -d / -f1) \
@@ -33,7 +34,7 @@ FROM ghcr.io/k8s-at-home/ubuntu:latest
 LABEL org.opencontainers.image.title="CoreDNS"
 LABEL org.opencontainers.image.authors="Anthony Rabbito <hello@anthonyrabbito.com>"
 LABEL org.opencontainers.image.version="${VERSION}"
-LABEL coredns_external_plugins="alternate, mdns"
+LABEL coredns-external-plugins="alternate, mdns"
 
 ARG VERSION
 ARG TARGETPLATFORM
@@ -68,4 +69,4 @@ USER kah
 
 EXPOSE 53 53/udp
 
-CMD ["/app/coredns", "-conf" "/config/Coredns"]
+CMD ["/app/coredns", "-conf", "/config/Coredns"]
