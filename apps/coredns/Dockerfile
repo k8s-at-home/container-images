@@ -68,5 +68,4 @@ USER kah
 
 EXPOSE 53 53/udp
 
-COPY ./apps/coredns/entrypoint.sh /entrypoint.sh
-CMD ["/entrypoint.sh"]
+CMD ["/app/coredns", "-conf" "/config/Coredns"]
