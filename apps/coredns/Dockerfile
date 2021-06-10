@@ -50,7 +50,7 @@ LABEL org.opencontainers.image.authors="Anthony Rabbito <hello@anthonyrabbito.co
 LABEL org.opencontainers.image.version="${VERSION}"
 LABEL coredns-external-plugins="alternate, mdns, wgsd, coredns-git, k8s_gateway"
 
-COPY --from=builder /go/src/coredns/coredns /app/coredns
+COPY --from=builder /go/src/coredns/coredns /coredns
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 COPY ./apps/coredns/Corefile /config/Corefile
@@ -59,4 +59,4 @@ USER nonroot:nonroot
 
 EXPOSE 53 53/udp
 
-ENTRYPOINT ["/coredns", "-conf", "/config/Corefile"]
+CMD ["/coredns", "-conf", "/config/Corefile"]
