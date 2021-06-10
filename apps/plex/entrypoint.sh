@@ -10,8 +10,10 @@ export PLEX_MEDIA_SERVER_INFO_MODEL=$(uname -m)
 #shellcheck disable=SC2155
 export PLEX_MEDIA_SERVER_INFO_PLATFORM_VERSION=$(uname -r)
 
-if [ ! -d "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}" ]; then
+[[ ! -d "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}" ]] && \
     mkdir -p "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"
-fi
+
+[[ -f "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}/Plex Media Server/plexmediaserver.pid" ]] && \
+    rm -f "${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}/Plex Media Server/plexmediaserver.pid"
 
 exec /usr/lib/plexmediaserver/Plex\ Media\ Server
