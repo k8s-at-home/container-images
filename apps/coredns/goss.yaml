@@ -1,7 +1,7 @@
 ---
-process:
-  coredns:
-    running: true
+# process:
+#   coredns:
+#     running: true
 
 port:
   tcp:53:
