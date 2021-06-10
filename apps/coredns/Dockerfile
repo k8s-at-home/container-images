@@ -11,6 +11,8 @@ ENV CGO_ENABLED=0 \
 
 WORKDIR /go/src/coredns
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # hadolint ignore=DL4006
 RUN \
   export GOOS \
@@ -20,14 +22,16 @@ RUN \
   && export GOARM \
   && GOARM=$(echo ${TARGETPLATFORM} | cut -d / -f3 | cut -c2-) \
   && git clone https://github.com/coredns/coredns.git . \
-  && git checkout ${VERSION} \
+  && git checkout v${VERSION} \
   && go get github.com/openshift/coredns-mdns \
   && go get github.com/coredns/alternate \
   && go get github.com/jwhited/wgsd \
-  && go mod tidy
+  && go get github.com/miekg/coredns-git \
+  && go get github.com/ori-edge/k8s_gateway \
+  && go mod tidy \
+  && go build -v -ldflags="-s -w -X github.com/coredns/coredns/pkg/version.Version=${VERSION}" -o coredns
 
 COPY ./apps/coredns/plugin.cfg plugin.cfg
-RUN make && ./coredns -version
 
 # hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
@@ -35,7 +39,7 @@ FROM ghcr.io/k8s-at-home/ubuntu:latest
 LABEL org.opencontainers.image.title="CoreDNS"
 LABEL org.opencontainers.image.authors="Anthony Rabbito <hello@anthonyrabbito.com>"
 LABEL org.opencontainers.image.version="${VERSION}"
-LABEL coredns-external-plugins="alternate, mdns"
+LABEL coredns-external-plugins="alternate, mdns, wgsd, coredns-git, k8s_gateway"
 
 ARG VERSION
 ARG TARGETPLATFORM

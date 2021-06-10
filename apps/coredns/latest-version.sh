@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+version=$(curl -sX GET "https://api.github.com/repos/coredns/coredns/releases/latest" | jq --raw-output '.tag_name')
 version="${version#*v}"
 version="${version#*release-}"
 printf "%s" "${version}"
