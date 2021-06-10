@@ -3,6 +3,7 @@ process:
   coredns:
     running: true
 
-port:
-  tcp:53:
-    listening: true
+# TODO: Need a corefile. Can't test goss locally on podman
+# port:
+#   tcp:53:
+#     listening: true
