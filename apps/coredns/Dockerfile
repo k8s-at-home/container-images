@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.16.4 as builder
+FROM docker.io/golang:1.16.4-alpine as builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -13,11 +13,16 @@ COPY ./apps/coredns/plugin.cfg /plugin.cfg
 
 WORKDIR /go/src/coredns
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# We apply cap_net_bind_service so that coredns can be run as
+# non-root and still listen on port less than 1024
 
 # hadolint ignore=DL4006
 RUN \
   export GOOS \
+  && /bin/ash \
+  && apk --no-cache --no-progress add ca-certificates=20191127-r5 git=2.30.2-r0 libcap=2.46-r0 \
+  && update-ca-certificates \
+  && rm -rf /var/cache/apk/* \
   && GOOS=$(echo ${TARGETPLATFORM} | cut -d / -f1) \
   && export GOARCH \
   && GOARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
@@ -33,47 +38,25 @@ RUN \
   && go get github.com/ori-edge/k8s_gateway \
   && go generate \
   && go mod tidy \
-  && go build -ldflags "-s -w -X github.com/coredns/coredns/coremain.GitCommit=$(git describe --dirty --always)" -o coredns
+  && go build -ldflags "-s -w -X github.com/coredns/coredns/coremain.GitCommit=$(git describe --always)" -o coredns \
+  && setcap cap_net_bind_service=+ep ./coredns
 
-# hadolint ignore=DL3007
-FROM ghcr.io/k8s-at-home/ubuntu:latest
+FROM gcr.io/distroless/static:nonroot
+
+ARG VERSION
 
 LABEL org.opencontainers.image.title="CoreDNS"
 LABEL org.opencontainers.image.authors="Anthony Rabbito <hello@anthonyrabbito.com>"
 LABEL org.opencontainers.image.version="${VERSION}"
 LABEL coredns-external-plugins="alternate, mdns, wgsd, coredns-git, k8s_gateway"
 
-ARG VERSION
-ARG TARGETPLATFORM
+COPY --from=builder /coredns /coredns
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-USER root
+COPY ./apps/coredns/Corefile /config/Corefile
 
-COPY --from=builder /go/src/coredns/coredns /app/coredns
-
-# hadolint ignore=DL3008,DL3015,SC2086
-RUN \
-  apt-get -qq update \
-  && apt-get -qq install -y \
-    ca-certificates \
-    tzdata \
-    curl \
-  && \
-  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && apt-get autoremove -y \
-  && apt-get clean \
-  && \
-  rm -rf \
-    /tmp/* \
-    /var/lib/apt/lists/* \
-    /var/cache/apt/* \
-    /var/tmp/ \
-  && chown -R kah:kah /app \
-  && chmod -R u=rwX,go=rX /app \
-  && printf "umask %d" "${UMASK}" >> /etc/bash.bashrc \
-  && update-ca-certificates
-
-USER kah
+USER nonroot:nonroot
 
 EXPOSE 53 53/udp
 
-CMD ["/app/coredns", "-conf", "/config/Corefile"]
+ENTRYPOINT ["/coredns", "-conf", "/config/Corefile"]

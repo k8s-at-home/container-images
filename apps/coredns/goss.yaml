@@ -6,3 +6,5 @@ process:
 port:
   tcp:53:
     listening: true
+  udp:53:
+    listening: true
