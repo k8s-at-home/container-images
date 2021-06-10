@@ -1,0 +1,8 @@
+---
+process:
+  coredns:
+    running: true
+
+port:
+  tcp:53:
+    listening: true
