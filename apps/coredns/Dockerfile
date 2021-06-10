@@ -9,6 +9,8 @@ ENV CGO_ENABLED=0 \
     GOBIN=/go/bin \
     GO111MODULE=on
 
+COPY ./apps/coredns/plugin.cfg /plugin.cfg
+
 WORKDIR /go/src/coredns
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -23,15 +25,15 @@ RUN \
   && GOARM=$(echo ${TARGETPLATFORM} | cut -d / -f3 | cut -c2-) \
   && git clone https://github.com/coredns/coredns.git . \
   && git checkout v${VERSION} \
+  && mv /plugin.cfg . \
   && go get github.com/openshift/coredns-mdns \
   && go get github.com/coredns/alternate \
   && go get github.com/jwhited/wgsd \
   && go get github.com/miekg/coredns-git \
   && go get github.com/ori-edge/k8s_gateway \
+  && go generate \
   && go mod tidy \
-  && go build -v -ldflags="-s -w -X github.com/coredns/coredns/pkg/version.Version=${VERSION}" -o coredns
-
-COPY ./apps/coredns/plugin.cfg plugin.cfg
+  && go build -ldflags "-s -w -X github.com/coredns/coredns/coremain.GitCommit=$(git describe --dirty --always)" -o coredns
 
 # hadolint ignore=DL3007
 FROM ghcr.io/k8s-at-home/ubuntu:latest
