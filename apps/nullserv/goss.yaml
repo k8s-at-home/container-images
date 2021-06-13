@@ -1,0 +1,16 @@
+---
+process:
+  nullserv:
+    running: true
+
+port:
+  tcp:80:
+    listening: true
+  tcp:443:
+    listening: true
+
+http:
+  http://localhost/health.html:
+    status: 200
+    body:
+      - '<!DOCTYPE html><title>x</title>'
