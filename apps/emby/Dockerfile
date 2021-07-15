@@ -64,6 +64,7 @@ RUN \
     /app \
     /tmp/opt/emby-server/system/* \
     /tmp/opt/emby-server/lib/* \
+    /tmp/opt/emby-server/extra/lib/* \
     /tmp/opt/emby-server/bin/ff* \
     /tmp/opt/emby-server/etc
 
